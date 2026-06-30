@@ -180,13 +180,6 @@ go build -o astro-site ./cmd/astro-site/
 - swe_house_pos() — определение номера дома
 ```
 
-## Папка `memory/` (picoclaw)
-
-Эта папка интегрирована с [picoclaw](https://github.com/picoclaw/picoclaw) для хранения заметок и дневников:
-- `/memory/MEMORY.md` — общий файл памяти
-- `/memory/YYYYMM/DD.md` — ежедневные заметки
-- `/memory/skills/{name}/SKILL.md` — навыки
-
 ## Лицензия
 
 MIT License — свободное использование, модификация и распространение.
