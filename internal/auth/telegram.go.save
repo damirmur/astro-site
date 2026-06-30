@@ -1,0 +1,48 @@
+package auth
+
+import (
+	"crypto/hmac"
+	"crypto/sha256"
+	"encoding/hex"
+	"fmt"
+	"sort"
+	"strings"
+)
+
+// TelegramUser представляет данные, получаемые от виджета Telegram
+type TelegramUser struct {
+	ID        int64  `json:"id"`
+	FirstName string `json:"first_name"`
+	Username  string `json:"username"`
+	AuthDate  int64  `json:"auth_date"`
+	Hash      string `json:"hash"`
+}
+
+// CheckTelegramAuth проверяет хэш данных от Telegram с использованием токена бота
+func CheckTelegramAuth(user TelegramUser, botToken string) (bool, error) {
+	// 1. Собираем все параметры, кроме самого хэша, в алфавитном порядке
+	dataCheckSlice := []string{
+		fmt.Sprintf("auth_date=%d", user.AuthDate),
+		fmt.Sprintf("first_name=%s", user.FirstName),
+		fmt.Sprintf("id=%d", user.ID),
+	}
+	if user.Username != "" {
+		dataCheckSlice = append(dataCheckSlice, fmt.Sprintf("username=%s", user.Username))
+	}
+	sort.Strings(dataCheckSlice)
+	dataCheckString := strings.Join(dataCheckSlice, "\n")
+
+	// 2. Создаем секретный ключ: SHA256 от токена бота
+	sha := sha256.New()
+	sha.Write([]byte(botToken))
+	secretKey := sha.Sum(nil)
+
+	// 3. Вычисляем HMAC-SHA256 от строки данных с секретным ключом
+	mac := hmac.New(sha256.New, secretKey)
+	mac.Write([]byte(dataCheckString))
+	expectedHash := hex.EncodeToString(mac.Sum(nil))
+
+	// 4. Сравниваем вычисленный хэш с тем, что прислал пользователь
+	return expectedHash == user.Hash, nil
+
+}
