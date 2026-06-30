@@ -4,5 +4,6 @@ main
 cron/
 sessions/
 state/
+memory/
 HEARTBEAT.md
 heartbeat.log
