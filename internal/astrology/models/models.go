@@ -1,8 +1,8 @@
-package astrology
+package models
 
 /*
-#cgo CFLAGS: -I${SRCDIR}/../../include
-#cgo LDFLAGS: -L${SRCDIR}/../../lib -lswe -lm
+#cgo CFLAGS: -I${SRCDIR}/../../../include
+#cgo LDFLAGS: -L${SRCDIR}/../../../lib -lswe -lm
 #include "swephexp.h"
 */
 import "C"
@@ -41,10 +41,10 @@ type Position struct {
 }
 
 type Aspect struct {
-	PlanetA int     `json:"a"`   
-	PlanetB int     `json:"b"`   
-	Type    int     `json:"t"`   
-	Orb     float64 `json:"orb"` 
+	PlanetA int     `json:"a"`
+	PlanetB int     `json:"b"`
+	Type    int     `json:"t"`
+	Orb     float64 `json:"orb"`
 }
 
 type AstroResult struct {
@@ -56,9 +56,22 @@ type AstroResult struct {
 }
 
 type TransitResult struct {
-	Timestamp time.Time  `json:"ts"` 
-	Planets   []Position `json:"pl"` 
-	Aspects   []Aspect   `json:"as"` 
+	Timestamp time.Time  `json:"ts"`
+	Planets   []Position `json:"pl"`
+	Aspects   []Aspect   `json:"as"`
+}
+
+type AiConfig struct {
+	Endpoint     string  `json:"endpoint"`
+	ModelID      string  `json:"model_id"`
+	ApiKey       string  `json:"api_key"`
+	Temperature  float64 `json:"temperature"`
+	SystemPrompt string  `json:"system_prompt"`
+}
+
+type InterpretRequest struct {
+	Type    string `json:"type"`
+	NatalID string `json:"natal_id"`
 }
 
 func round3(val float64) float64 {
@@ -97,17 +110,36 @@ func getAngularDistance(lon1, lon2 float64) float64 {
 
 func (c *Calculator) ComputeNatal(ctx context.Context, t time.Time, lat, lon float64, hsys string, settings UserSettings) (*AstroResult, error) {
 	var dret [2]C.double
-	C.swe_utc_to_jd(C.int(t.Year()), C.int(int(t.Month())), C.int(t.Day()), C.int(t.Hour()), C.int(t.Minute()), C.double(t.Second()), C.SE_GREG_CAL, &dret[0], nil)
+	C.swe_utc_to_jd(
+		C.int(t.Year()),
+		C.int(int(t.Month())),
+		C.int(t.Day()),
+		C.int(t.Hour()),
+		C.int(t.Minute()),
+		C.double(float64(t.Second())+float64(t.Nanosecond())/1e9),
+		C.SE_GREG_CAL,
+		&dret[0],
+		nil,
+	)
 	tjdUt := dret[1]
 
 	var houses [13]C.double
 	var ascmc [10]C.double
 	var serr [256]C.char
 
-	if hsys == "" { hsys = "P" }
+	if hsys == "" {
+		hsys = "P"
+	}
 	cHsys := C.int(hsys[0])
 
-	C.swe_houses(tjdUt, C.double(lat), C.double(lon), cHsys, (*C.double)(unsafe.Pointer(&houses)), (*C.double)(unsafe.Pointer(&ascmc)))
+	C.swe_houses(
+		tjdUt,
+		C.double(lat),
+		C.double(lon),
+		cHsys,
+		(*C.double)(unsafe.Pointer(&houses)),
+		(*C.double)(unsafe.Pointer(&ascmc)),
+	)
 
 	var housesList []float64
 	for i := 1; i <= 12; i++ {
@@ -116,7 +148,13 @@ func (c *Calculator) ComputeNatal(ctx context.Context, t time.Time, lat, lon flo
 
 	armc := ascmc[2]
 	var eps [6]C.double
-	C.swe_calc_ut(tjdUt, C.SE_ECL_NUT, C.SEFLG_SWIEPH, (*C.double)(unsafe.Pointer(&eps)), (*C.char)(unsafe.Pointer(&serr)))
+	C.swe_calc_ut(
+		tjdUt,
+		C.SE_ECL_NUT,
+		C.SEFLG_SWIEPH,
+		(*C.double)(unsafe.Pointer(&eps)),
+		(*C.char)(unsafe.Pointer(&serr)),
+	)
 
 	var planetsList []Position
 	var xx [6]C.double
@@ -128,11 +166,28 @@ func (c *Calculator) ComputeNatal(ctx context.Context, t time.Time, lat, lon flo
 
 	for _, idStr := range selectedPlanets {
 		id, err := strconv.Atoi(idStr)
-		if err != nil { continue }
+		if err != nil {
+			continue
+		}
 
-		if flags := C.swe_calc_ut(tjdUt, C.int(id), C.SEFLG_SWIEPH|C.SEFLG_SPEED, (*C.double)(unsafe.Pointer(&xx)), (*C.char)(unsafe.Pointer(&serr))); flags >= 0 {
+		flags := C.swe_calc_ut(
+			tjdUt,
+			C.int(id),
+			C.SEFLG_SWIEPH|C.SEFLG_SPEED,
+			(*C.double)(unsafe.Pointer(&xx)),
+			(*C.char)(unsafe.Pointer(&serr)),
+		)
+
+		if flags >= 0 {
 			lonPlan := float64(xx[0])
-			houseNum := C.swe_house_pos(armc, C.double(lat), eps[0], cHsys, (*C.double)(unsafe.Pointer(&xx)), (*C.char)(unsafe.Pointer(&serr)))
+			houseNum := C.swe_house_pos(
+				armc,
+				C.double(lat),
+				eps[0],
+				cHsys,
+				(*C.double)(unsafe.Pointer(&xx)),
+				(*C.char)(unsafe.Pointer(&serr)),
+			)
 
 			planetsList = append(planetsList, Position{
 				ID:        id,
@@ -145,12 +200,16 @@ func (c *Calculator) ComputeNatal(ctx context.Context, t time.Time, lat, lon flo
 		}
 	}
 
-	sort.Slice(planetsList, func(i, j int) bool { return planetsList[i].ID < planetsList[j].ID })
+	sort.Slice(planetsList, func(i, j int) bool {
+		return planetsList[i].ID < planetsList[j].ID
+	})
 
 	var aspectsList []Aspect
 	var allowedAspects []int
 	for _, aspStr := range settings.Aspects {
-		if val, err := strconv.Atoi(aspStr); err == nil { allowedAspects = append(allowedAspects, val) }
+		if val, err := strconv.Atoi(aspStr); err == nil {
+			allowedAspects = append(allowedAspects, val)
+		}
 	}
 
 	for i := 0; i < len(planetsList); i++ {
@@ -160,67 +219,133 @@ func (c *Calculator) ComputeNatal(ctx context.Context, t time.Time, lat, lon flo
 			dist := getAngularDistance(pA.Longitude, pB.Longitude)
 
 			orbA := 5.0
-			if val, ok := settings.NatalOrb[strconv.Itoa(pA.ID)]; ok { orbA = float64(val) }
+			if val, ok := settings.NatalOrb[strconv.Itoa(pA.ID)]; ok {
+				orbA = float64(val)
+			}
 			orbB := 5.0
-			if val, ok := settings.NatalOrb[strconv.Itoa(pB.ID)]; ok { orbB = float64(val) }
+			if val, ok := settings.NatalOrb[strconv.Itoa(pB.ID)]; ok {
+				orbB = float64(val)
+			}
 			maxOrb := (orbA + orbB) / 2.0
 
 			for _, aspType := range allowedAspects {
 				deviation := math.Abs(dist - float64(aspType))
 				if deviation <= maxOrb {
-					aspectsList = append(aspectsList, Aspect{PlanetA: pA.ID, PlanetB: pB.ID, Type: aspType, Orb: round3(deviation)})
+					aspectsList = append(aspectsList, Aspect{
+						PlanetA: pA.ID,
+						PlanetB: pB.ID,
+						Type:    aspType,
+						Orb:     round3(deviation),
+					})
 				}
 			}
 		}
 	}
 
-	return &AstroResult{Timestamp: t, Planets: planetsList, Houses: housesList, Aspects: aspectsList}, nil
+	return &AstroResult{
+		Timestamp: t,
+		Planets:   planetsList,
+		Houses:    housesList,
+		Aspects:   aspectsList,
+	}, nil
 }
 
 func (c *Calculator) ComputeTransit(ctx context.Context, transitTime time.Time, natalPlanets []Position, natalHouses []float64, hsys string, settings UserSettings) (*TransitResult, error) {
 	var dret [2]C.double
-	C.swe_utc_to_jd(C.int(transitTime.Year()), C.int(int(transitTime.Month())), C.int(transitTime.Day()), C.int(transitTime.Hour()), C.int(transitTime.Minute()), C.double(transitTime.Second()), C.SE_GREG_CAL, &dret[0], nil)
+	C.swe_utc_to_jd(
+		C.int(transitTime.Year()),
+		C.int(int(transitTime.Month())),
+		C.int(transitTime.Day()),
+		C.int(transitTime.Hour()),
+		C.int(transitTime.Minute()),
+		C.double(float64(transitTime.Second())+float64(transitTime.Nanosecond())/1e9),
+		C.SE_GREG_CAL,
+		&dret[0],
+		nil,
+	)
 	tjdUt := dret[1]
 
-	if hsys == "" { hsys = "P" }
+	if hsys == "" {
+		hsys = "P"
+	}
 	cHsys := C.int(hsys[0])
 
 	var dummyHouses [13]C.double
 	var ascmc [10]C.double
-	C.swe_houses(tjdUt, C.double(settings.Latitude), C.double(settings.Longitude), cHsys, (*C.double)(unsafe.Pointer(&dummyHouses)), (*C.double)(unsafe.Pointer(&ascmc)))
-	armc := ascmc[2]
-
-	var eps [6]C.double
 	var serr [256]C.char
-	C.swe_calc_ut(tjdUt, C.SE_ECL_NUT, C.SEFLG_SWIEPH, (*C.double)(unsafe.Pointer(&eps)), (*C.char)(unsafe.Pointer(&serr)))
+
+	C.swe_houses(
+		tjdUt,
+		C.double(settings.Latitude),
+		C.double(settings.Longitude),
+		cHsys,
+		(*C.double)(unsafe.Pointer(&dummyHouses)),
+		(*C.double)(unsafe.Pointer(&ascmc)),
+	)
+
+	armc := ascmc[2]
+	var eps [6]C.double
+	C.swe_calc_ut(
+		tjdUt,
+		C.SE_ECL_NUT,
+		C.SEFLG_SWIEPH,
+		(*C.double)(unsafe.Pointer(&eps)),
+		(*C.char)(unsafe.Pointer(&serr)),
+	)
 
 	var transitPlanets []Position
 	var xx [6]C.double
 
-	for _, idStr := range settings.Planets {
-		id, err := strconv.Atoi(idStr)
-		if err != nil { continue }
+	selectedPlanets := settings.Planets
+	if len(selectedPlanets) == 0 {
+		selectedPlanets = []string{"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "12"}
+	}
 
-		if flags := C.swe_calc_ut(tjdUt, C.int(id), C.SEFLG_SWIEPH|C.SEFLG_SPEED, (*C.double)(unsafe.Pointer(&xx)), (*C.char)(unsafe.Pointer(&serr))); flags >= 0 {
-			houseNum := C.swe_house_pos(armc, C.double(settings.Latitude), eps[0], cHsys, (*C.double)(unsafe.Pointer(&xx)), (*C.char)(unsafe.Pointer(&serr)))
+	for _, idStr := range selectedPlanets {
+		id, err := strconv.Atoi(idStr)
+		if err != nil {
+			continue
+		}
+
+		flags := C.swe_calc_ut(
+			tjdUt,
+			C.int(id),
+			C.SEFLG_SWIEPH|C.SEFLG_SPEED,
+			(*C.double)(unsafe.Pointer(&xx)),
+			(*C.char)(unsafe.Pointer(&serr)),
+		)
+
+		if flags >= 0 {
+			houseNum := C.swe_house_pos(
+				armc,
+				C.double(settings.Latitude),
+				eps[0],
+				cHsys,
+				(*C.double)(unsafe.Pointer(&xx)),
+				(*C.char)(unsafe.Pointer(&serr)),
+			)
 
 			transitPlanets = append(transitPlanets, Position{
 				ID:        id,
 				Longitude: round3(float64(xx[0])),
 				Latitude:  round3(float64(xx[1])),
 				Speed:     round3(float64(xx[3])),
-				House:     int(houseNum), 
+				House:     int(houseNum),
 				IsRetro:   float64(xx[3]) < 0,
 			})
 		}
 	}
 
 	maxTransitOrb := 1.0
-	if val, err := strconv.ParseFloat(settings.TransitOrb, 64); err == nil { maxTransitOrb = val }
+	if val, err := strconv.ParseFloat(settings.TransitOrb, 64); err == nil {
+		maxTransitOrb = val
+	}
 
 	var allowedAspects []int
 	for _, aspStr := range settings.Aspects {
-		if val, err := strconv.Atoi(aspStr); err == nil { allowedAspects = append(allowedAspects, val) }
+		if val, err := strconv.Atoi(aspStr); err == nil {
+			allowedAspects = append(allowedAspects, val)
+		}
 	}
 
 	var transitAspects []Aspect
