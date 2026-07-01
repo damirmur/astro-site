@@ -1,25 +1,159 @@
-body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #0f172a; color: #f8fafc; padding: 20px; line-height: 1.5; }
-.container { max-width: 900px; margin: 0 auto; }
-h1 { text-align: center; color: #38bdf8; margin-bottom: 30px; }
-h3, h4, h5 { margin-top: 0; color: #bae6fd; }
-.card { background: #1e293b; padding: 25px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3); border: 1px solid #334155; }
-.section-card { background: #1e293b; padding: 15px 20px; border-radius: 12px; border: 1px solid #334155; margin-bottom: 20px; cursor: pointer; }
-.section-card[open] { padding-bottom: 25px; cursor: default; }
-summary { font-weight: bold; color: #38bdf8; outline: none; font-size: 16px; padding: 5px 0; }
+/* === БЛАГОРОДНАЯ СВЕТЛАЯ И ВОЗДУШНАЯ ПАЛИТРА === */
+body { 
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+    background: #fdfbf7; 
+    color: #292524; 
+    padding: 20px; 
+    line-height: 1.6; 
+}
+.container { max-width: 1000px; margin: 0 auto; }
+h1 { text-align: center; color: #b45309; margin-bottom: 30px; font-weight: 400; letter-spacing: 0.5px; }
+h3, h4, h5 { margin-top: 0; color: #78350f; }
+
+.card { 
+    background: #ffffff; 
+    padding: 25px; 
+    border-radius: 12px; 
+    margin-bottom: 20px; 
+    box-shadow: 0 4px 20px -2px rgba(120,53,15,0.08), 0 2px 8px -1px rgba(0,0,0,0.04); 
+    border: 1px solid #f1ece4; 
+}
+.section-card { 
+    background: #fbf9f4; 
+    padding: 15px 20px; 
+    border-radius: 12px; 
+    border: 1px solid #eae2d5; 
+    margin-bottom: 20px; 
+    cursor: pointer; 
+}
+.section-card[open] { padding-bottom: 25px; cursor: default; background: #ffffff; }
+summary { font-weight: bold; color: #c2410c; outline: none; font-size: 16px; padding: 5px 0; }
+
 .hidden { display: none !important; }
-.form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px; margin-top: 15px; }
+
+/* 6. Исправленная сетка полей ввода: теперь все элементы (включая дату) 100% равны друг другу */
+.form-grid { 
+    display: grid; 
+    grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); 
+    gap: 15px; 
+    margin-top: 15px; 
+}
 .form-group { display: flex; flex-direction: column; }
-label { margin-bottom: 6px; color: #94a3b8; font-size: 14px; }
-input, select { background: #0f172a; border: 1px solid #475569; color: white; padding: 10px; border-radius: 6px; font-size: 14px; outline: none; }
-input:focus, select:focus { border-color: #38bdf8; }
-.btn { background: #0284c7; color: white; border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 14px; }
-.btn-success { background: #16a34a; color: white; border: none; padding: 12px 20px; border-radius: 6px; cursor: pointer; font-weight: bold; font-size: 14px; }
-.btn-danger { background: #dc2626; color: white; border: none; padding: 6px 12px; border-radius: 6px; cursor: pointer; float: right; font-size: 13px; }
-button:hover { opacity: 0.9; }
-.user-info { background: #334155; padding: 12px 20px; border-radius: 8px; margin-bottom: 25px; font-size: 15px; }
-pre { background: #020617; padding: 15px; border-radius: 8px; overflow-x: auto; color: #4ade80; font-family: monospace; border: 1px solid #1e293b; }
-.text-report { background: #0f172a; border-left: 4px solid #38bdf8; padding: 20px; border-radius: 0 8px 8px 0; }
-.report-title { color: #f43f5e; font-size: 18px; margin-bottom: 15px; border-bottom: 1px solid #334155; padding-bottom: 8px; }
+label { margin-bottom: 6px; color: #b45309; font-size: 14px; font-weight: 500; }
+input, select { 
+    background: #fdfbf7; 
+    border: 1px solid #cbd5e1; 
+    color: #1e293b; 
+    padding: 10px; 
+    border-radius: 6px; 
+    font-size: 14px; 
+    outline: none; 
+    width: 100%; /* Занимает всю ширину своей колонки */
+    box-sizing: border-box;
+}
+input:focus, select:focus { border-color: #ea580c; box-shadow: 0 0 0 3px rgba(234,88,12,0.1); }
+
+.btn-group {
+    display: flex;
+    flex-wrap: wrap; 
+    gap: 12px; 
+    margin-top: 15px;
+}
+
+.btn { 
+    background: #ea580c; 
+    color: #ffffff; 
+    border: none; 
+    padding: 11px 20px; 
+    border-radius: 6px; 
+    cursor: pointer; 
+    font-weight: 600; 
+    font-size: 14px; 
+    box-shadow: 0 2px 4px rgba(234,88,12,0.2);
+}
+.btn:hover { background: #c2410c; }
+
+.btn-success { 
+    background: #16a34a; 
+    color: #ffffff; 
+    border: none; 
+    padding: 11px 20px; 
+    border-radius: 6px; 
+    cursor: pointer; 
+    font-weight: 600; 
+    font-size: 14px; 
+    box-shadow: 0 2px 4px rgba(22,163,74,0.2);
+}
+.btn-success:hover { background: #15803d; }
+
+.btn-danger { 
+    background: #fff5f5; 
+    color: #e11d48; 
+    border: 1px solid #fca5a5; 
+    padding: 6px 12px; 
+    border-radius: 6px; 
+    cursor: pointer; 
+    font-size: 13px; 
+    font-weight: 500;
+}
+.btn-danger:hover { background: #ffe4e6; border-color: #f43f5e; }
+
+.btn-ai-natal { background: #7c2d12; color: white; }
+.btn-ai-natal:hover { background: #9a3412; }
+.btn-ai-transit { background: #9a3412; color: white; }
+.btn-ai-transit:hover { background: #ea580c; }
+.btn-ai-full { background: #047857; color: white; }
+.btn-ai-full:hover { background: #065f46; }
+
+.user-info { background: #f1ece4; padding: 12px 20px; border-radius: 8px; margin-bottom: 25px; font-size: 15px; border-left: 4px solid #ea580c; color: #44403c; }
+
+/* 3. Изменили настройки textarea на автоматическую подстройку высоты контента */
+pre, textarea { 
+    background: #f8f6f0 !important; 
+    color: #0f172a !important; 
+    font-family: monospace; 
+    border: 1px solid #cbd5e1 !important; 
+    min-height: 250px; 
+    height: auto; 
+}
+
+.active-radix-card {
+    padding: 12px 20px; 
+    background: #fffbeb; 
+    border: 1px solid #fef3c7;
+    border-left: 4px solid #d97706; 
+    margin-top: -10px; 
+    margin-bottom: 20px;
+    border-radius: 0 8px 8px 0;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+    background: #ffffff;
+    margin-top: 10px;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid #e2e8f0;
+}
+th {
+    background: #f1ece4 !important; 
+    color: #78350f !important;
+    padding: 10px 12px;
+    font-weight: 600;
+    border-bottom: 2px solid #e2e8f0;
+}
+td {
+    padding: 10px 12px;
+    border-bottom: 1px solid #f1ece4;
+    color: #334155;
+}
+tr:hover { background: #fbfbf9; }
+.row-selected { background: #fffbeb !important; border-left: 3px solid #d97706; }
+
+.text-report { background: #faf9f5; border-left: 4px solid #ea580c; padding: 25px; border-radius: 0 8px 8px 0; color: #1e293b; border-top: 1px solid #f1ece4; border-right: 1px solid #f1ece4; border-bottom: 1px solid #f1ece4; }
+.report-title { color: #9a3412; font-size: 18px; margin-bottom: 15px; border-bottom: 1px solid #eae2d5; padding-bottom: 8px; font-weight: 600; }
 .report-list { padding-left: 20px; margin: 0; }
-.report-list li { margin-bottom: 10px; color: #cbd5e1; }
-.retro-label { color: #f87171; font-weight: bold; font-size: 12px; }
+.report-list li { margin-bottom: 10px; color: #334155; }
+.retro-label { color: #ea580c; font-weight: bold; font-size: 12px; }

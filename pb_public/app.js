@@ -2,6 +2,13 @@ let currentNatalId = "";
 let cachedHoroscopes = [];
 
 document.addEventListener("DOMContentLoaded", () => {
+    // Автоматическая подстановка текущей даты и времени в формате UTC+0 при первом открытии
+    const now = new Date();
+    const utcString = new Date(now.getTime() - now.getTimezoneOffset() * 60000)
+                        .toISOString()
+                        .substring(0, 16);
+    document.getElementById("birth-date").value = utcString;
+
     if (localStorage.getItem("token")) showApp();
 });
 
@@ -25,43 +32,35 @@ async function loadHoroscopes() {
     try {
         cachedHoroscopes = await ApiService.getHoroscopesList();
         
-        // Автовыбор: если в базе есть карты, а currentNatalId пустой — берем самую первую (свежую)
         if (cachedHoroscopes.length > 0 && !currentNatalId) {
             const latest = cachedHoroscopes[0];
             currentNatalId = latest.id;
-            document.getElementById("selected-natal-name").innerText = `"${latest.title}" (ID: ${latest.id})`;
+            const formattedDate = latest.event_date ? latest.event_date.replace("T", " ").substring(0, 19) : "—";
+            document.getElementById("selected-natal-name").innerText = `"${latest.title}" от ${formattedDate}`;
+        } else if (cachedHoroscopes.length === 0) {
+            document.getElementById("selected-natal-name").innerText = "База карт пуста";
         }
         
         UiService.renderHoroscopesList(cachedHoroscopes, currentNatalId);
-    } catch (err) { console.error("Ошибка загрузки архива карт:", err); }
+    } catch (err) { console.error("Ошибка архива:", err); }
 }
 
-function selectNatalCard(id, title) {
+function selectNatalCard(id, title, dateStr) {
     currentNatalId = id;
-    document.getElementById("selected-natal-name").innerText = `"${title}" (ID: ${id})`;
+    document.getElementById("selected-natal-name").innerText = `"${title}" от ${dateStr}`;
     UiService.renderHoroscopesList(cachedHoroscopes, currentNatalId);
 }
 
-// НОВАЯ ФУНКЦИЯ: Интерактивное удаление выбранного гороскопа
 async function deleteNatalCard(id, title) {
-    if (!confirm(`Вы действительно хотите безвозвратно удалить гороскоп "${title}" из вашей базы данных?`)) {
-        return;
-    }
-
+    if (!confirm(`Удалить гороскоп "${title}" из базы?`)) return;
     try {
         await ApiService.deleteHoroscope(id);
-        
-        // Если была удалена активная натальная карта, сбрасываем выбор
         if (currentNatalId === id) {
             currentNatalId = "";
             document.getElementById("selected-natal-name").innerText = "Последний расчет";
         }
-        
-        // Перечитываем и перерисовываем базу
         loadHoroscopes();
-    } catch (err) {
-        alert(err.message);
-    }
+    } catch (err) { alert(err.message); }
 }
 
 async function loadSettings() {
@@ -104,7 +103,7 @@ async function calculateNatal() {
     const lon = document.getElementById("geo-lon").value;
 
     let title = document.getElementById("calc-title").value.trim();
-    if (!title) title = `Натал от ${dateInput.replace("T", " ")}`;
+    if (!title) title = `Расчет от ${dateInput.replace("T", " ")}`;
 
     document.getElementById("text-output").innerText = "Вычисления...";
 
@@ -146,26 +145,26 @@ async function calculateTransit() {
         document.getElementById("text-output").innerHTML = `<span style="color:#f87171;"><b>Ошибка транзита:</b> ${err.message}</span>`;
     }
 }
+
+// ВОЗВРАЩЕННАЯ ИСПРАВЛЕННАЯ ФУНКЦИЯ ИНТЕРПРЕТАЦИИ ИИ
 async function interpretAi(type) {
     if (!currentNatalId) {
-        return alert("Сначала выберите активную натальную карту в таблице 'Ваша база гороскопов'!");
+        return alert("Сначала выберите активную карту в архиве!");
     }
 
     const outputDiv = document.getElementById("text-output");
-    outputDiv.innerHTML = `<div style="color:#fda4af; font-weight:bold;">🤖 Gemma анализирует JSON-данные эфемерид... Пожалуйста, подождите (это может занять до 30-40 секунд)...</div>`;
+    outputDiv.innerHTML = `<div style="color:#b45309; font-weight:bold;">🤖 Астропсихолог-ИИ анализирует JSON-данные эфемерид... Пожалуйста, подождите...</div>`;
 
     try {
         const data = await ApiService.getAiInterpretation(type, currentNatalId);
-        
-        // Превращаем переносы строк от нейросети (\n) в красивые HTML абзацы
         const formattedText = data.interpretation.replace(/\n/g, "<br>");
         
-        outputDiv.innerHTML = `<div class="text-report" style="border-color:#e11d48; background:#0f172a; color:#ffe4e6; font-size:15px; line-height:1.6;">
-            <h4 style="color:#fda4af; margin-bottom:15px; border-bottom:1px solid #334155; padding-bottom:5px;">🧠 ИИ-Интерпретация от Gemma</h4>
-            ${formattedText}
+        outputDiv.innerHTML = `<div class="text-report">
+            <h4 class="report-title">🧠 Интерпретация от астропсихолога-ИИ</h4>
+            <div style="font-size:15px; line-height:1.7; color:#292524;">${formattedText}</div>
         </div>`;
     } catch (err) {
-        outputDiv.innerHTML = `<span style="color:#f87171;"><b>Ошибка ИИ-интерпретатора:</b> ${err.message}. Проверьте, загружена ли модель в LM Studio на 10 chain-сервере.</span>`;
+        outputDiv.innerHTML = `<span style="color:#ef4444;"><b>Ошибка ИИ-интерпретатора:</b> ${err.message}. Проверьте LM Studio.</span>`;
     }
 }
 

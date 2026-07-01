@@ -3,12 +3,13 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Астрологический Процессор</title>
+    <title>Astro3D.ru</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
     <div class="container">
-        <h1>🌌 Астропроцессор на Go + PocketBase</h1>
+        <!-- 1. Заменили заголовок на Astro3D.ru -->
+        <h1>🌌 Astro3D.ru</h1>
 
         <!-- БЛОК АВТОРИЗАЦИИ -->
         <div id="auth-block" class="card">
@@ -24,7 +25,8 @@
         <!-- КЛИЕНТСКАЯ ПАНЕЛЬ -->
         <div id="app-block" class="card hidden">
             <div class="user-info">
-                Привет, <span id="user-name">Гость</span>! (ID: <span id="user-id">-</span>)
+                <!-- 2. Убрали отображение ID пользователя -->
+                Привет, <span id="user-name">Гость</span>!
                 <button onclick="logout()" class="btn-danger">Выйти</button>
             </div>
 
@@ -59,26 +61,26 @@
                 </div>
                 
                 <div class="form-group" style="margin-top: 15px;">
-                    <label style="color:#67e8f9; font-weight:bold;">⚙️ Дополнительные параметры (JSON):</label>
-                    <textarea id="settings-raw" style="background:#020617; color:#4ade80; font-family:monospace; font-size:12px; width:100%; height:220px; box-sizing:border-box; padding:12px; border-radius:6px; border:1px solid #475569; resize:vertical;" placeholder="{ ... }"></textarea>
+                    <label>⚙️ Дополнительные параметры (JSON):</label>
+                    <textarea id="settings-raw" placeholder="{ ... }"></textarea>
                 </div>
 
                 <button onclick="saveSettings()" class="btn" style="margin-top:10px;">Сохранить настройки</button>
             </details>
 
-            <!-- 1.2 ОБНОВЛЕННЫЙ БЛОК: СВЕРНУТАЯ БАЗА ГОРОСКОПОВ С КНОПКОЙ -->
-            <details class="section-card" style="border-color: #a855f7;" id="horoscopes-details">
-                <summary style="color:#c084fc;">📂 Ваша база гороскопов (Нажмите, чтобы открыть)</summary>
-                <p style="font-size:13px; color:#94a3b8; margin-top:10px;">Выберите карту из списка ниже, чтобы построить к ней транзит неба, или удалите ненужные:</p>
+            <!-- 1.2 СВЕРНУТАЯ БАЗА ГОРОСКОПОВ -->
+            <details class="section-card" style="border-color: #ea580c;" id="horoscopes-details">
+                <summary style="color:#ea580c;">📂 Ваша база гороскопов (Нажмите, чтобы открыть)</summary>
+                <p style="font-size:13px; color:#64748b; margin-top:10px;">Выберите карту из списка ниже, чтобы построить к ней транзит неба, или удалите ненужные:</p>
                 <div id="horoscopes-list-container" style="margin-top:10px;">
                     <p>Загрузка архива карт...</p>
                 </div>
             </details>
             
-            <!-- Индикатор выбранной карты выносим отдельно, чтобы он был виден всегда -->
-            <div class="card" style="padding:12px 20px; background:#1e1b4b; border-color:#a855f7; margin-top:-10px; margin-bottom:20px;">
-                <span style="font-size:14px;"><b>Выбранная карта радикса для транзитов:</b></span> 
-                <span id="selected-natal-name" style="color:#c084fc; font-weight:bold; font-size:14px; margin-left:5px;">Последний расчет</span>
+            <!-- 4. Индикатор переименован (Title + Дата/Время подставим через JS) -->
+            <div class="active-radix-card">
+                <span><b>Выбранная карта радикса для транзитов:</b></span> 
+                <span id="selected-natal-name" style="color:#b45309; font-weight:bold; margin-left:5px;">Загрузка архива...</span>
             </div>
 
             <!-- 2. АСТРОЛОГИЧЕСКИЕ РАСЧЕТЫ -->
@@ -87,11 +89,13 @@
                 <div class="form-grid">
                     <div class="form-group">
                         <label>Название расчета (Title):</label>
-                        <input type="text" id="calc-title" placeholder="Если пусто — будет дата/время" style="width:100%; max-width:250px;">
+                        <input type="text" id="calc-title" placeholder="Если пусто — будет дата/время">
                     </div>
+                    <!-- 5. Заменили "рождения" на "события" -->
+                    <!-- 6. Поле ввода даты-времени теперь обернуто стандартно для автовыравнивания -->
                     <div class="form-group">
-                        <label>Дата и время рождения (UTC):</label>
-                        <input type="datetime-local" id="birth-date" value="1971-11-19T19:43">
+                        <label>Дата и время события (UTC):</label>
+                        <input type="datetime-local" id="birth-date">
                     </div>
                     <div class="form-group">
                         <label>Расчетная Широта:</label>
@@ -102,29 +106,32 @@
                         <input type="number" id="geo-lon" value="55.10" step="0.01">
                     </div>
                 </div>
-                <div style="margin-top:15px;">
+                <div class="btn-group">
                     <button onclick="calculateNatal()" class="btn">Рассчитать Натал</button>
                     <button onclick="calculateTransit()" class="btn-success">Показать Transit на сейчас</button>
                 </div>
             </div>
 
-<!-- КНОПКИ ИНТЕРПРЕТАЦИИ НЕЙРОСЕТЬЮ GEMMA -->
-<div class="card" style="margin-top:20px; border-color: #e11d48; background: #1e1115;">
-    <h3 style="color:#fda4af;">🤖 Локальный ИИ-Интерпретатор (Gemma 12B)</h3>
-    <p style="font-size:13px; color:#fca5a5; margin-top:-5px;">Запустите анализ выбранной карты через нейросеть LM Studio во внутренней сети:</p>
-    <button onclick="interpretAi('natal')" class="btn" style="background:#be123c;">1. Разбор Натала 📜</button>
-    <button onclick="interpretAi('transit')" class="btn" style="background:#9f1239; margin-left:10px;">2. Обстановка на небе ☁️</button>
-    <button onclick="interpretAi('full')" class="btn-success" style="background:#e11d48; border:none; margin-left:10px;">3. Совмещение (Транзит в домах Натала) ⚡</button>
-</div>
+            <!-- 8. Заменили заголовок блока ИИ -->
+            <div class="card" style="border-color: #ea580c; background: #fffdfa;">
+                <h3 style="color:#9a3412;">🤖 Интерпретация от астропсихолога-ИИ</h3>
+                <p style="font-size:13px; color:#b45309; margin-top:-5px;">Запустите анализ выбранной карты через нейросеть LM Studio во внутренней сети:</p>
+                <div class="btn-group">
+                    <button onclick="interpretAi('natal')" class="btn btn-ai-natal">1. Разбор Натала 📜</button>
+                    <button onclick="interpretAi('transit')" class="btn btn-ai-transit">2. Обстановка на небе ☁️</button>
+                    <button onclick="interpretAi('full')" class="btn btn-ai-full">3. Совмещение (Транзит в домах Натала) ⚡</button>
+                </div>
+            </div>
+
             <!-- 4. ТЕКСТОВЫЙ РЕЗУЛЬТАТ -->
             <div class="card" style="margin-top:20px;">
                 <h3>📊 Астрологический отчет</h3>
                 <div id="text-output" class="text-report">Нажмите кнопку для запуска расчета...</div>
             </div>
 
-            <!-- 3. СВЕРНУТЫЙ СЫРОЙ JSON -->
+            <!-- 10. Убрали слово "Сырой" из заголовка -->
             <details class="section-card" style="margin-top:20px;">
-                <summary>💻 Сырой JSON ответ (Для разработчиков)</summary>
+                <summary>💻 JSON ответ (Для разработчиков)</summary>
                 <pre id="json-output">Здесь появится technical log...</pre>
             </details>
         </div>
