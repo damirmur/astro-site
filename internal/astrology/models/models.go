@@ -61,18 +61,6 @@ type TransitResult struct {
 	Aspects   []Aspect   `json:"as"`
 }
 
-type AiConfig struct {
-	Endpoint     string  `json:"endpoint"`
-	ModelID      string  `json:"model_id"`
-	ApiKey       string  `json:"api_key"`
-	Temperature  float64 `json:"temperature"`
-	SystemPrompt string  `json:"system_prompt"`
-}
-
-type InterpretRequest struct {
-	Type    string `json:"type"`
-	NatalID string `json:"natal_id"`
-}
 
 func round3(val float64) float64 {
 	return math.Round(val*1000) / 1000

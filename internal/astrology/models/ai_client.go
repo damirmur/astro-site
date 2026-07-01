@@ -1,5 +1,18 @@
 package models
 
+type AiConfig struct {
+	Endpoint     string  `json:"endpoint"`
+	ModelID      string  `json:"model_id"`
+	ApiKey       string  `json:"api_key"`
+	Temperature  float64 `json:"temperature"`
+	SystemPrompt string  `json:"system_prompt"`
+}
+
+type InterpretRequest struct {
+	Type    string `json:"type"`
+	NatalID string `json:"natal_id"`
+}
+
 import (
 	"bytes"
 	"context"
