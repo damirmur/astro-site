@@ -20,6 +20,43 @@ const UiService = {
         }
     },
 
+    renderHoroscopesList(items, selectedId) {
+        const container = document.getElementById("horoscopes-list-container");
+        if (!items || items.length === 0) {
+            container.innerHTML = `<p style="color:#94a3b8; font-style:italic;">В вашей базе пока нет сохраненных карт. Создайте первый расчет ниже.</p>`;
+            return;
+        }
+
+        let html = `<table border="1" style="width:100%; border-collapse:collapse; text-align:left; font-size:14px; background:#0f172a;">
+            <tr style="background:#334155; color:#bae6fd;">
+                <th style="padding:6px 10px;">Название (Title)</th>
+                <th style="padding:6px 10px;">Дата события (UTC)</th>
+                <th style="padding:6px 10px; text-align:center; width:190px;">Действия</th>
+            </tr>`;
+
+        items.forEach(item => {
+            const isSelected = item.id === selectedId;
+            const rowStyle = isSelected ? `style="background:#3b0764; border-left:3px solid #a855f7;"` : `style="border-bottom:1px solid #1e293b;"`;
+            const btnText = isSelected ? "🎯 Активна" : "Выбрать";
+            const btnClass = isSelected ? "btn-success" : "btn";
+
+            const formattedDate = item.event_date ? item.event_date.replace("T", " ").substring(0, 19) : "—";
+            const safeTitle = item.title.replace(/'/g, "\\'");
+
+            html += `<tr ${rowStyle}>
+                <td style="padding:6px 10px; font-weight:bold;">${item.title}</td>
+                <td style="padding:6px 10px; color:#94a3b8;">${formattedDate}</td>
+                <td style="padding:6px 10px; text-align:center;">
+                    <button onclick="selectNatalCard('${item.id}', '${safeTitle}')" class="${btnClass}" style="padding:3px 8px; font-size:12px; font-weight:bold;">${btnText}</button>
+                    <!-- НОВАЯ КНОПКА УДАЛЕНИЯ -->
+                    <button onclick="deleteNatalCard('${item.id}', '${safeTitle}')" style="background:#b91c1c; color:white; border:none; border-radius:4px; padding:3px 8px; font-size:12px; margin-left:5px; cursor:pointer;">Удалить ❌</button>
+                </td>
+            </tr>`;
+        });
+        html += `</table>`;
+        container.innerHTML = html;
+    },
+
     renderRawJson(data) {
         document.getElementById("json-output").innerText = JSON.stringify(data, null, 2);
     },
@@ -53,22 +90,53 @@ const UiService = {
         document.getElementById("text-output").innerHTML = html;
     },
 
+    // Вспомогательная функция для определения, в какой натальный дом попал транзитный градус
+    getHouseNumber(lon, houses) {
+        if (!houses || houses.length < 12) return 0;
+        
+        // Перебираем дома с 1 по 11
+        for (let i = 0; i < 11; i++) {
+            let currentCusp = houses[i];
+            let nextCusp = houses[i + 1];
+            
+            if (currentCusp < nextCusp) {
+                if (lon >= currentCusp && lon < nextCusp) return i + 1;
+            } else {
+                // Случай перехода через 360° / 0° Овна
+                if (lon >= currentCusp || lon < nextCusp) return i + 1;
+            }
+        }
+        // Если не попало в 1-11 дома, значит планета строго в 12-м доме (между куспидом 12 и 1)
+        return 12;
+    },
+
     renderTransitReport(title, data, serverTime) {
         let html = `<h4 class="report-title">⚡ ${title}</h4>`;
         
-        // ВЫВОД ПОЛОЖЕНИЯ ТРАНЗИТНЫХ ПЛАНЕТ В ДОМАХ НАТАЛА
+        // Вытаскиваем массив куспидов домов ИЗ ВЫБРАННОЙ НАТАЛЬНОЙ КАРТЫ, который сохранен в кэше приложения
+        const activeCard = cachedHoroscopes.find(h => h.id === currentNatalId);
+        const natalHouses = activeCard && activeCard.astrological_data ? activeCard.astrological_data.hs : null;
+
         html += `<h5>Положение текущих планет на небе в домах вашего Натала:</h5><ul class="report-list" style="margin-bottom:20px;">`;
+        
         if (data.pl) {
             data.pl.forEach(p => {
                 const zod = ElementsService.getZodiacData(p.lon);
                 const pName = PLANET_NAMES[p.id] || `Планета ${p.id}`;
                 const retroText = p.ir ? " <span class='retro-label'>[Ретро ℞]</span>" : "";
-                html += `<li><b>${pName}</b> идет по знаку <b>${zod.name}</b> и проецируется в ваш <b style="color:#fbbf24;">${p.h}-й натальный дом</b>${retroText}.</li>`;
+                
+                // РАССЧИТЫВАЕМ ДОМ СТРОГО ПО НАТАЛЬНОЙ СЕТКЕ КУСПИДОВ
+                let correctHouse = p.h; // запасной вариант бэкенда
+                if (natalHouses) {
+                    correctHouse = this.getHouseNumber(p.lon, natalHouses);
+                }
+
+                html += `<li><b>${pName}</b> идет по знаку <b>${zod.name}</b> и проецируется в ваш <b style="color:#fbbf24;">${correctHouse}-й натальный дом</b>${retroText}.</li>`;
             });
         }
         html += `</ul>`;
 
-        // ВЫВОД АСПЕКТОВ МЕЖДУ ТРАНЗИТОМ И НАТАЛОМ
+        // ВЫВОД АСПЕКТОВ
         html += `<h5>Точные касания к натальной карте рождения (Орбис 1°):</h5><ul class="report-list">`;
         if (data.as && data.as.length > 0) {
             data.as.forEach(a => {
@@ -78,7 +146,7 @@ const UiService = {
                 html += `<li>🌍 Транзитное <b>${tPlanet}</b> делает <b>${aName}</b> к вашему натальному <b>${nPlanet}</b> (орбис: ${a.orb}°).</li>`;
             });
         } else {
-            html += `<li><i>На текущую секунду точных планетарных аспектов к наталу нет. Небо спокойно.</i></li>`;
+            html += `<li><i>На текущую секунду точных планетарных транзитов нет. Небо спокойно.</i></li>`;
         }
         html += `</ul>`;
         
