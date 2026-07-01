@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Астрологический Процессор</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <h1>🌌 Астропроцессор на Go + PocketBase</h1>
+
+        <!-- БЛОК АВТОРИЗАЦИИ -->
+        <div id="auth-block" class="card">
+            <h3>Вход в систему</h3>
+            <p>Для расчета натальной карты и транзитов авторизуйтесь через Telegram:</p>
+            
+            <!-- ОФИЦИАЛЬНЫЙ ВИДЖЕТ ТЕЛЕГРАМ -->
+<script async src="https://telegram.org/js/telegram-widget.js?22"
+    data-telegram-login="astro3dAI_bot"
+    data-size="large"
+    data-onauth="onTelegramAuth(user)"
+    data-request-access="write">
+</script>
+       </div>
+
+        <!-- КЛИЕНТСКАЯ ПАНЕЛЬ (СКРЫТА ПО УМОЛЧАНИЮ) -->
+        <div id="app-block" class="card hidden">
+            <div class="user-info">
+                Привет, <span id="user-name">Гость</span>! (ID: <span id="user-id">-</span>)
+                <button onclick="logout()" class="btn-danger">Выйти</button>
+            </div>
+
+            <!-- НАСТРОЙКИ -->
+            <div class="section">
+                <h3>🛠️ Ваши текущие настройки (из БД)</h3>
+                <pre id="settings-output">Загрузка настроек...</pre>
+            </div>
+
+            <!-- УПРАВЛЕНИЕ РАСЧЕТАМИ -->
+            <div class="section">
+                <h3>🔮 Астрологические расчеты</h3>
+                <div class="form-group">
+					<label>Дата и время рождения (UTC):</label>
+					<input type="datetime-local" id="birth-date" value="1971-11-19T19:43">
+                </div>
+                <div class="form-group">
+					<label>Широта (Оренбург: 51.73):</label>
+					<input type="number" id="geo-lat" value="55.75" step="0.01">
+                </div>
+                <div class="form-group">
+					<label>Долгота (Оренбург: 55.10):</label>
+					<input type="number" id="geo-lon" value="37.61" step="0.01">
+                </div>
+
+                <button onclick="calculateNatal()" class="btn">Рассчитать Натал</button>
+                <button onclick="calculateTransit()" class="btn-success">Показать Транзит на сейчас</button>
+            </div>
+
+            <!-- ВЫВОД РЕЗУЛЬТАТА -->
+            <div class="section">
+                <h3>📊 Результат JSON</h3>
+                <pre id="json-output">Нажмите кнопку для расчета...</pre>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

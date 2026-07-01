@@ -5,18 +5,17 @@ import (
 	"log"
 	"os"
 	"strconv"
-	"strings"
 	"time"
 
 	"astro-site/internal/astrology"
 	"astro-site/internal/auth"
 
-	"github.com/pocketbase/pocketbase"
-	"github.com/pocketbase/pocketbase/apis"
-	"github.com/pocketbase/pocketbase/core"
-	"github.com/pocketbase/pocketbase/plugins/ghupdate"
-	"github.com/pocketbase/pocketbase/plugins/migratecmd"
-	"github.com/pocketbase/pocketbase/tools/security"
+        "github.com/pocketbase/pocketbase"
+        "github.com/pocketbase/pocketbase/apis"
+        "github.com/pocketbase/pocketbase/core"
+        "github.com/pocketbase/pocketbase/plugins/ghupdate"
+        "github.com/pocketbase/pocketbase/plugins/migratecmd"
+        "github.com/pocketbase/pocketbase/tools/security"
 )
 
 func getDefaultSettings(app core.App) astrology.UserSettings {
@@ -36,7 +35,9 @@ func getDefaultSettings(app core.App) astrology.UserSettings {
 	}
 	records, err := app.FindRecordsByFilter("default_settings", "1=1", "", 1, 0)
 	if err != nil || len(records) == 0 { return fallback }
+	
 	var dbDefault astrology.UserSettings
+	// ИСПРАВЛЕНО: обращаемся к первому элементу слайса records[0]
 	if err := records[0].UnmarshalJSONField("settings_data", &dbDefault); err != nil { return fallback }
 	return dbDefault
 }
@@ -44,35 +45,52 @@ func getDefaultSettings(app core.App) astrology.UserSettings {
 func main() {
 	app := pocketbase.New()
 
-	if len(os.Args) >= 2 && os.Args[1] == "serve" {
-		hasHttp := false
-		for _, arg := range os.Args {
-			if strings.HasPrefix(arg, "--http") { hasHttp = true; break }
-		}
-		if !hasHttp { os.Args = append(os.Args, "--http=0.0.0.0:8090") }
-	}
-
 	migratecmd.MustRegister(app, app.RootCmd, migratecmd.Config{Automigrate: true})
 	ghupdate.MustRegister(app, app.RootCmd, ghupdate.Config{})
 
 	app.OnServe().BindFunc(func(se *core.ServeEvent) error {
 		
+		se.Router.Bind(apis.CORS(apis.CORSConfig{
+			AllowOrigins: []string{"https://astro3d.ru", "http://10.66.66.9:8090", "http://localhost:8090"},
+			AllowHeaders: []string{"Content-Type", "Authorization"},
+			AllowMethods: []string{"GET", "POST", "PUT", "DELETE"},
+		}))
+
 		// 1. Авторизация Telegram
 		se.Router.POST("/api/auth/telegram", func(re *core.RequestEvent) error {
 			var tgUser auth.TelegramUser
 			if err := re.BindBody(&tgUser); err != nil { return apis.NewBadRequestError("Неверный формат", err) }
+
 			botToken := os.Getenv("TELEGRAM_BOT_TOKEN")
-			if botToken == "" { botToken = "ВАШ_ДЕФОЛТНЫЙ_ТОКЕН_БОТА" }
+			if botToken == "" {
+				return apis.NewBadRequestError("Критическая ошибка: Переменная TELEGRAM_BOT_TOKEN не задана на сервере", nil)
+			}
+
 			isValid, err := auth.CheckTelegramAuth(tgUser, botToken)
-			if err != nil || !isValid { return apis.NewBadRequestError("Ошибка верификации", err) }
+			if err != nil || !isValid { return apis.NewBadRequestError("Ошибка верификации Telegram хэша", err) }
+
 			usersCollection, err := re.App.FindCollectionByNameOrId("users")
 			if err != nil { return apis.NewNotFoundError("Коллекция не найдена", err) }
-			tgUsername := "tg_" + strconv.FormatInt(tgUser.ID, 10)
+
+			var tgID int64
+			if idFloat, ok := tgUser["id"].(float64); ok {
+				tgID = int64(idFloat)
+			} else if idInt, ok := tgUser["id"].(int64); ok {
+				tgID = idInt
+			}
+
+			if tgID == 0 {
+				return apis.NewBadRequestError("Не удалось получить ID пользователя от Telegram", nil)
+			}
+
+			tgUsername := "tg_" + strconv.FormatInt(tgID, 10)
 			userRecord, err := re.App.FindFirstRecordByData("users", "username", tgUsername)
+
 			if err != nil {
+				firstName, _ := tgUser["first_name"].(string)
 				userRecord = core.NewRecord(usersCollection)
 				userRecord.Set("username", tgUsername)
-				userRecord.Set("name", tgUser.FirstName)
+				userRecord.Set("name", firstName)
 				userRecord.SetPassword(security.RandomString(32)) 
 				if err := re.App.Save(userRecord); err != nil { return apis.NewBadRequestError("Ошибка создания", err) }
 			}
@@ -86,7 +104,9 @@ func main() {
 			record, err := re.App.FindFirstRecordByData("user_settings", "user", authRecord.Id)
 			if err != nil { return re.JSON(200, getDefaultSettings(re.App)) }
 			var settings astrology.UserSettings
-			if err := record.UnmarshalJSONField("settings_data", &settings); err != nil { return apis.NewBadRequestError("Ошибка парсинга", err) }
+			if err := record.UnmarshalJSONField("settings_data", &settings); err != nil {
+				return apis.NewBadRequestError("Ошибка парсинга", err)
+			}
 			return re.JSON(200, settings)
 		})
 
@@ -131,7 +151,7 @@ func main() {
 			defer calc.Close()
 
 			result, err := calc.ComputeNatal(context.Background(), t, lat, lon, currentSettings.Houses, currentSettings)
-			if err != nil { return apis.NewBadRequestError("Ошибка", err) }
+			if err != nil { return apis.NewBadRequestError("Ошибка расчета", err) }
 
 			horoscopesColl, err := re.App.FindCollectionByNameOrId("horoscopes")
 			if err == nil {
@@ -147,18 +167,18 @@ func main() {
 			return re.JSON(200, result)
 		})
 
-		// 5. НОВЫЙ ЭНДПОИНТ: Расчет транзитов на "сейчас"
+		// 5. Расчет транзитов
 		se.Router.GET("/api/astrology/transit", func(re *core.RequestEvent) error {
 			authRecord := re.Auth
 			if authRecord == nil { return apis.NewUnauthorizedError("Неавторизован", nil) }
 
-			// Ищем последнюю натальную карту пользователя из таблицы horoscopes, чтобы взять её за основу
 			natalRecords, err := re.App.FindRecordsByFilter("horoscopes", "user = '" + authRecord.Id + "' && title = 'Natal'", "-created", 1, 0)
 			if err != nil || len(natalRecords) == 0 {
-				return apis.NewBadRequestError("Сначала рассчитайте вашу натальную карту (/api/astrology/chart), чтобы сравнить её с транзитами", nil)
+				return apis.NewBadRequestError("Сначала рассчитайте вашу натальную карту (/api/astrology/chart)", nil)
 			}
 
 			var natalChart astrology.AstroResult
+			// ИСПРАВЛЕНО: обращаемся к первому элементу слайса natalRecords[0]
 			if err := natalRecords[0].UnmarshalJSONField("astrological_data", &natalChart); err != nil {
 				return apis.NewBadRequestError("Ошибка чтения натала", err)
 			}
@@ -170,17 +190,14 @@ func main() {
 				if err := userSettingsRecord.UnmarshalJSONField("settings_data", &us); err == nil { currentSettings = us }
 			}
 
-			// Транзитное время — текущая секунда на сервере
 			transitTime := time.Now()
 
 			calc := astrology.NewCalculator("./ephe")
 			defer calc.Close()
 
-			// Считаем положение транзитных планет и их аспекты к натальным планетам
 			transitResult, err := calc.ComputeTransit(context.Background(), transitTime, natalChart.Planets, currentSettings)
 			if err != nil { return apis.NewBadRequestError("Ошибка транзита", err) }
 
-			// Сохраняем событие транзита в историю
 			horoscopesColl, err := re.App.FindCollectionByNameOrId("horoscopes")
 			if err == nil {
 				newTransitRec := core.NewRecord(horoscopesColl)
@@ -194,9 +211,13 @@ func main() {
 
 			return re.JSON(200, transitResult)
 		})
+
+		se.Router.GET("/{path...}", apis.Static(os.DirFS("./pb_public"), true))
 		
 		return se.Next()
 	})
 
-	if err := app.Start(); err != nil { log.Fatal(err) }
+	if err := app.Start(); err != nil {
+		log.Fatal(err)
+	}
 }
