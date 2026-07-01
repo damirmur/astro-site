@@ -195,7 +195,7 @@ func main() {
 			calc := astrology.NewCalculator("./ephe")
 			defer calc.Close()
 
-			transitResult, err := calc.ComputeTransit(context.Background(), transitTime, natalChart.Planets, currentSettings)
+			transitResult, err := calc.ComputeTransit(context.Background(), transitTime, natalChart.Planets, natalChart.Houses, currentSettings.Houses, currentSettings)
 			if err != nil { return apis.NewBadRequestError("Ошибка транзита", err) }
 
 			horoscopesColl, err := re.App.FindCollectionByNameOrId("horoscopes")

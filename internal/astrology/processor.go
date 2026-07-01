@@ -41,8 +41,8 @@ type Position struct {
 }
 
 type Aspect struct {
-	PlanetA int     `json:"a"`   // В транзитах: ID натальной планеты
-	PlanetB int     `json:"b"`   // В транзитах: ID транзитной планеты
+	PlanetA int     `json:"a"`   
+	PlanetB int     `json:"b"`   
 	Type    int     `json:"t"`   
 	Orb     float64 `json:"orb"` 
 }
@@ -55,11 +55,10 @@ type AstroResult struct {
 	Aspects   []Aspect   `json:"as"`
 }
 
-// Новая структура ответа для транзитной карты
 type TransitResult struct {
-	Timestamp time.Time  `json:"ts"` // Время транзита
-	Planets   []Position `json:"pl"` // Координаты планет на небе "сейчас"
-	Aspects   []Aspect   `json:"as"` // Аспекты между наталом и транзитом
+	Timestamp time.Time  `json:"ts"` 
+	Planets   []Position `json:"pl"` 
+	Aspects   []Aspect   `json:"as"` 
 }
 
 func round3(val float64) float64 {
@@ -96,31 +95,6 @@ func getAngularDistance(lon1, lon2 float64) float64 {
 	return diff
 }
 
-// Вспомогательный метод для расчета позиций планет без привязки к домам (для неба "сейчас")
-func (c *Calculator) getSkyPositions(tjdUt C.double, selectedPlanets []string) []Position {
-	var planetsList []Position
-	var xx [6]C.double
-	var serr [256]C.char
-
-	for _, idStr := range selectedPlanets {
-		id, err := strconv.Atoi(idStr)
-		if err != nil {
-			continue
-		}
-
-		if flags := C.swe_calc_ut(tjdUt, C.int(id), C.SEFLG_SWIEPH|C.SEFLG_SPEED, (*C.double)(unsafe.Pointer(&xx)), (*C.char)(unsafe.Pointer(&serr))); flags >= 0 {
-			planetsList = append(planetsList, Position{
-				ID:        id,
-				Longitude: round3(float64(xx[0])),
-				Latitude:  round3(float64(xx[1])),
-				Speed:     round3(float64(xx[3])),
-				IsRetro:   float64(xx[3]) < 0,
-			})
-		}
-	}
-	return planetsList
-}
-
 func (c *Calculator) ComputeNatal(ctx context.Context, t time.Time, lat, lon float64, hsys string, settings UserSettings) (*AstroResult, error) {
 	var dret [2]C.double
 	C.swe_utc_to_jd(C.int(t.Year()), C.int(int(t.Month())), C.int(t.Day()), C.int(t.Hour()), C.int(t.Minute()), C.double(t.Second()), C.SE_GREG_CAL, &dret[0], nil)
@@ -130,9 +104,7 @@ func (c *Calculator) ComputeNatal(ctx context.Context, t time.Time, lat, lon flo
 	var ascmc [10]C.double
 	var serr [256]C.char
 
-	if hsys == "" {
-		hsys = "P"
-	}
+	if hsys == "" { hsys = "P" }
 	cHsys := C.int(hsys[0])
 
 	C.swe_houses(tjdUt, C.double(lat), C.double(lon), cHsys, (*C.double)(unsafe.Pointer(&houses)), (*C.double)(unsafe.Pointer(&ascmc)))
@@ -156,9 +128,7 @@ func (c *Calculator) ComputeNatal(ctx context.Context, t time.Time, lat, lon flo
 
 	for _, idStr := range selectedPlanets {
 		id, err := strconv.Atoi(idStr)
-		if err != nil {
-			continue
-		}
+		if err != nil { continue }
 
 		if flags := C.swe_calc_ut(tjdUt, C.int(id), C.SEFLG_SWIEPH|C.SEFLG_SPEED, (*C.double)(unsafe.Pointer(&xx)), (*C.char)(unsafe.Pointer(&serr))); flags >= 0 {
 			lonPlan := float64(xx[0])
@@ -180,9 +150,7 @@ func (c *Calculator) ComputeNatal(ctx context.Context, t time.Time, lat, lon flo
 	var aspectsList []Aspect
 	var allowedAspects []int
 	for _, aspStr := range settings.Aspects {
-		if val, err := strconv.Atoi(aspStr); err == nil {
-			allowedAspects = append(allowedAspects, val)
-		}
+		if val, err := strconv.Atoi(aspStr); err == nil { allowedAspects = append(allowedAspects, val) }
 	}
 
 	for i := 0; i < len(planetsList); i++ {
@@ -209,43 +177,62 @@ func (c *Calculator) ComputeNatal(ctx context.Context, t time.Time, lat, lon flo
 	return &AstroResult{Timestamp: t, Planets: planetsList, Houses: housesList, Aspects: aspectsList}, nil
 }
 
-// НОВЫЙ МЕТОД: Расчет транзитов (аспекты между натальными планетами и транзитными)
-func (c *Calculator) ComputeTransit(ctx context.Context, transitTime time.Time, natalPlanets []Position, settings UserSettings) (*TransitResult, error) {
+func (c *Calculator) ComputeTransit(ctx context.Context, transitTime time.Time, natalPlanets []Position, natalHouses []float64, hsys string, settings UserSettings) (*TransitResult, error) {
 	var dret [2]C.double
 	C.swe_utc_to_jd(C.int(transitTime.Year()), C.int(int(transitTime.Month())), C.int(transitTime.Day()), C.int(transitTime.Hour()), C.int(transitTime.Minute()), C.double(transitTime.Second()), C.SE_GREG_CAL, &dret[0], nil)
 	tjdUt := dret[1]
 
-	// Получаем положения планет на небе на момент транзита
-	transitPlanets := c.getSkyPositions(tjdUt, settings.Planets)
+	if hsys == "" { hsys = "P" }
+	cHsys := C.int(hsys[0])
 
-	// Получаем лимит орбиса для транзитов из настроек (дефолт 1.0 градус)
-	maxTransitOrb := 1.0
-	if val, err := strconv.ParseFloat(settings.TransitOrb, 64); err == nil {
-		maxTransitOrb = val
-	}
+	var dummyHouses [13]C.double
+	var ascmc [10]C.double
+	C.swe_houses(tjdUt, C.double(settings.Latitude), C.double(settings.Longitude), cHsys, (*C.double)(unsafe.Pointer(&dummyHouses)), (*C.double)(unsafe.Pointer(&ascmc)))
+	armc := ascmc[2]
 
-	var allowedAspects []int
-	for _, aspStr := range settings.Aspects {
-		if val, err := strconv.Atoi(aspStr); err == nil {
-			allowedAspects = append(allowedAspects, val)
+	var eps [6]C.double
+	var serr [256]C.char
+	C.swe_calc_ut(tjdUt, C.SE_ECL_NUT, C.SEFLG_SWIEPH, (*C.double)(unsafe.Pointer(&eps)), (*C.char)(unsafe.Pointer(&serr)))
+
+	var transitPlanets []Position
+	var xx [6]C.double
+
+	for _, idStr := range settings.Planets {
+		id, err := strconv.Atoi(idStr)
+		if err != nil { continue }
+
+		if flags := C.swe_calc_ut(tjdUt, C.int(id), C.SEFLG_SWIEPH|C.SEFLG_SPEED, (*C.double)(unsafe.Pointer(&xx)), (*C.char)(unsafe.Pointer(&serr))); flags >= 0 {
+			houseNum := C.swe_house_pos(armc, C.double(settings.Latitude), eps[0], cHsys, (*C.double)(unsafe.Pointer(&xx)), (*C.char)(unsafe.Pointer(&serr)))
+
+			transitPlanets = append(transitPlanets, Position{
+				ID:        id,
+				Longitude: round3(float64(xx[0])),
+				Latitude:  round3(float64(xx[1])),
+				Speed:     round3(float64(xx[3])),
+				House:     int(houseNum), 
+				IsRetro:   float64(xx[3]) < 0,
+			})
 		}
 	}
 
-	var transitAspects []Aspect
+	maxTransitOrb := 1.0
+	if val, err := strconv.ParseFloat(settings.TransitOrb, 64); err == nil { maxTransitOrb = val }
 
-	// Сравниваем каждую натальную планету с каждой транзитной планетой
+	var allowedAspects []int
+	for _, aspStr := range settings.Aspects {
+		if val, err := strconv.Atoi(aspStr); err == nil { allowedAspects = append(allowedAspects, val) }
+	}
+
+	var transitAspects []Aspect
 	for _, nPlanet := range natalPlanets {
 		for _, tPlanet := range transitPlanets {
 			dist := getAngularDistance(nPlanet.Longitude, tPlanet.Longitude)
-
 			for _, aspType := range allowedAspects {
 				deviation := math.Abs(dist - float64(aspType))
-
-				// Жесткий транзитный фильтр (обычно 1 градус)
 				if deviation <= maxTransitOrb {
 					transitAspects = append(transitAspects, Aspect{
-						PlanetA: nPlanet.ID, // Натальная
-						PlanetB: tPlanet.ID, // Транзитная
+						PlanetA: nPlanet.ID,
+						PlanetB: tPlanet.ID,
 						Type:    aspType,
 						Orb:     round3(deviation),
 					})
