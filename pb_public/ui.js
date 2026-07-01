@@ -3,7 +3,6 @@ const UiService = {
         document.getElementById("auth-block").classList.add("hidden");
         document.getElementById("app-block").classList.remove("hidden");
         document.getElementById("user-name").innerText = user.name || user.username;
-        document.getElementById("user-id").innerText = user.id;
     },
 
     renderSettingsForm(data, remainderJson) {
@@ -27,29 +26,28 @@ const UiService = {
             return;
         }
 
-        let html = `<table border="1" style="width:100%; border-collapse:collapse; text-align:left; font-size:14px; background:#0f172a;">
-            <tr style="background:#334155; color:#bae6fd;">
-                <th style="padding:6px 10px;">Название (Title)</th>
-                <th style="padding:6px 10px;">Дата события (UTC)</th>
-                <th style="padding:6px 10px; text-align:center; width:190px;">Действия</th>
+        let html = `<table>
+            <tr>
+                <th>Название (Title)</th>
+                <th>Дата события (UTC)</th>
+                <th style="text-align:center; width:190px;">Действия</th>
             </tr>`;
 
         items.forEach(item => {
             const isSelected = item.id === selectedId;
-            const rowStyle = isSelected ? `style="background:#3b0764; border-left:3px solid #a855f7;"` : `style="border-bottom:1px solid #1e293b;"`;
+            const rowClass = isSelected ? `class="row-selected"` : "";
             const btnText = isSelected ? "🎯 Активна" : "Выбрать";
             const btnClass = isSelected ? "btn-success" : "btn";
 
             const formattedDate = item.event_date ? item.event_date.replace("T", " ").substring(0, 19) : "—";
             const safeTitle = item.title.replace(/'/g, "\\'");
 
-            html += `<tr ${rowStyle}>
-                <td style="padding:6px 10px; font-weight:bold;">${item.title}</td>
-                <td style="padding:6px 10px; color:#94a3b8;">${formattedDate}</td>
-                <td style="padding:6px 10px; text-align:center;">
-                    <button onclick="selectNatalCard('${item.id}', '${safeTitle}')" class="${btnClass}" style="padding:3px 8px; font-size:12px; font-weight:bold;">${btnText}</button>
-                    <!-- НОВАЯ КНОПКА УДАЛЕНИЯ -->
-                    <button onclick="deleteNatalCard('${item.id}', '${safeTitle}')" style="background:#b91c1c; color:white; border:none; border-radius:4px; padding:3px 8px; font-size:12px; margin-left:5px; cursor:pointer;">Удалить ❌</button>
+            html += `<tr ${rowClass}>
+                <td style="padding:10px 12px; font-weight:600;">${item.title}</td>
+                <td style="padding:10px 12px; color:#475569;">${formattedDate}</td>
+                <td style="padding:10px 12px; text-align:center;">
+                    <button onclick="selectNatalCard('${item.id}', '${safeTitle}', '${formattedDate}')" class="${btnClass}" style="padding:4px 10px; font-size:12px; font-weight:bold; box-shadow:none;">${btnText}</button>
+                    <button onclick="deleteNatalCard('${item.id}', '${safeTitle}')" class="btn-danger" style="padding:4px 10px; font-size:12px; margin-left:5px; cursor:pointer;">Удалить</button>
                 </td>
             </tr>`;
         });
@@ -63,23 +61,51 @@ const UiService = {
 
     renderNatalReport(title, data, scoresData) {
         let html = `<h4 class="report-title">📊 ${title}</h4>`;
-        html += `<h5>Положения планет в знаках и домах:</h5><ul class="report-list">`;
         
+        html += `<h5>Положения планет в знаках и домах:</h5>`;
+        html += `<table style="margin-bottom:20px;">
+            <tr>
+                <th>Планета</th>
+                <th>Абс. Долгота</th>
+                <th>Знак Зодиака</th>
+                <th>Градус Знака</th>
+                <th>Дом</th>
+                <th>Ретро</th>
+            </tr>`;
+            
         data.chart.pl.forEach(p => {
             const zod = ElementsService.getZodiacData(p.lon);
             const pName = PLANET_NAMES[p.id] || `Планета ${p.id}`;
-            const retroText = p.ir ? " <span class='retro-label'>[Ретроградная ℞]</span>" : "";
-            html += `<li><b>${pName}</b> в знаке <b>${zod.name}</b> (${zod.text}), в <b>${p.h}-м доме</b>${retroText}.</li>`;
+            
+            // Вынесли символы планет и знаков строго НАПЕРЕД названия
+            const planetEmoji = pName.split(" ").pop() || "";
+            const planetText = pName.split(" ").shift() || "";
+            const signEmoji = zod.name.split(" ").pop() || "";
+            const signText = zod.name.split(" ").shift() || "";
+
+            html += `<tr>
+                <td style="font-weight:600; color:#b45309;">${planetEmoji} ${planetText}</td>
+                <td>${p.lon}°</td>
+                <td style="font-weight:500;">${signEmoji} ${signText}</td>
+                <td>${zod.text}</td>
+                <td style="font-weight:600; color:#ea580c;">${p.h} дом</td>
+                <td style="color:#ef4444; font-weight:bold;">${p.ir ? "℞" : "—"}</td>
+            </tr>`;
         });
-        html += `</ul>`;
+        html += `</table>`;
 
         if (data.chart.as && data.chart.as.length > 0) {
-            html += `<h5>Аспектные связи натальной карты:</h5><ul class="report-list">`;
+            html += `<h5>Аспектные связи натальной карты:</h5><ul class="report-list" style="margin-bottom:20px;">`;
             data.chart.as.forEach(a => {
                 const pA = PLANET_NAMES[a.a] || `Пл.${a.a}`;
                 const pB = PLANET_NAMES[a.b] || `Пл.${a.b}`;
                 const aName = ASPECT_NAMES[a.t] || `Аспект ${a.t}°`;
-                html += `<li>🪐 <b>${pA}</b> образует <b>${aName}</b> к <b>${pB}</b> (точность: ${a.orb}°).</li>`;
+                
+                const emojiA = pA.split(" ").pop() || "";
+                const emojiB = pB.split(" ").pop() || "";
+                const emojiAsp = aName.split(" ").pop() || "";
+
+                html += `<li>${emojiA} ${emojiAsp} ${emojiB} — <b>${pA.split(" ")[0]}</b> образует <b>${aName.split(" ")[0]}</b> к <b>${pB.split(" ")[0]}</b> (точность: ${a.orb}°).</li>`;
             });
             html += `</ul>`;
         } else {
@@ -90,96 +116,119 @@ const UiService = {
         document.getElementById("text-output").innerHTML = html;
     },
 
-    // Вспомогательная функция для определения, в какой натальный дом попал транзитный градус
     getHouseNumber(lon, houses) {
         if (!houses || houses.length < 12) return 0;
-        
-        // Перебираем дома с 1 по 11
         for (let i = 0; i < 11; i++) {
             let currentCusp = houses[i];
             let nextCusp = houses[i + 1];
-            
             if (currentCusp < nextCusp) {
                 if (lon >= currentCusp && lon < nextCusp) return i + 1;
             } else {
-                // Случай перехода через 360° / 0° Овна
                 if (lon >= currentCusp || lon < nextCusp) return i + 1;
             }
         }
-        // Если не попало в 1-11 дома, значит планета строго в 12-м доме (между куспидом 12 и 1)
         return 12;
     },
 
     renderTransitReport(title, data, serverTime) {
         let html = `<h4 class="report-title">⚡ ${title}</h4>`;
-        
-        // Вытаскиваем массив куспидов домов ИЗ ВЫБРАННОЙ НАТАЛЬНОЙ КАРТЫ, который сохранен в кэше приложения
         const activeCard = cachedHoroscopes.find(h => h.id === currentNatalId);
         const natalHouses = activeCard && activeCard.astrological_data ? activeCard.astrological_data.hs : null;
 
-        html += `<h5>Положение текущих планет на небе в домах вашего Натала:</h5><ul class="report-list" style="margin-bottom:20px;">`;
-        
+        html += `<h5>Положение текущих планет на небе в домах вашего Натала:</h5>`;
+        html += `<table style="margin-bottom:20px;">
+            <tr>
+                <th>Транзитная Планета</th>
+                <th>Текущий Знак</th>
+                <th>Точные Координаты</th>
+                <th>Натальный Дом Проекции</th>
+                <th>Статус</th>
+            </tr>`;
+            
         if (data.pl) {
             data.pl.forEach(p => {
                 const zod = ElementsService.getZodiacData(p.lon);
                 const pName = PLANET_NAMES[p.id] || `Планета ${p.id}`;
-                const retroText = p.ir ? " <span class='retro-label'>[Ретро ℞]</span>" : "";
                 
-                // РАССЧИТЫВАЕМ ДОМ СТРОГО ПО НАТАЛЬНОЙ СЕТКЕ КУСПИДОВ
-                let correctHouse = p.h; // запасной вариант бэкенда
+                const planetEmoji = pName.split(" ").pop() || "";
+                const planetText = pName.split(" ").shift() || "";
+                const signEmoji = zod.name.split(" ").pop() || "";
+                const signText = zod.name.split(" ").shift() || "";
+
+                let correctHouse = p.h;
                 if (natalHouses) {
                     correctHouse = this.getHouseNumber(p.lon, natalHouses);
                 }
-
-                html += `<li><b>${pName}</b> идет по знаку <b>${zod.name}</b> и проецируется в ваш <b style="color:#fbbf24;">${correctHouse}-й натальный дом</b>${retroText}.</li>`;
+                html += `<tr>
+                    <td style="font-weight:600; color:#15803d;">${planetEmoji} ${planetText}</td>
+                    <td>${signEmoji} ${signText}</td>
+                    <td>${zod.text}</td>
+                    <td style="font-weight:600; color:#b45309; background:#fffbeb;">${correctHouse}-й дом</td>
+                    <td style="color:#ea580c;">${p.ir ? "Ретро ℞" : "Прямая"}</td>
+                </tr>`;
             });
         }
-        html += `</ul>`;
+        html += `</table>`;
 
-        // ВЫВОД АСПЕКТОВ
         html += `<h5>Точные касания к натальной карте рождения (Орбис 1°):</h5><ul class="report-list">`;
         if (data.as && data.as.length > 0) {
             data.as.forEach(a => {
                 const nPlanet = PLANET_NAMES[a.a] || `Натал Пл.${a.a}`;
                 const tPlanet = PLANET_NAMES[a.b] || `Транзит Пл.${a.b}`;
                 const aName = ASPECT_NAMES[a.t] || `Аспект ${a.t}°`;
-                html += `<li>🌍 Транзитное <b>${tPlanet}</b> делает <b>${aName}</b> к вашему натальному <b>${nPlanet}</b> (орбис: ${a.orb}°).</li>`;
+                
+                const emojiN = nPlanet.split(" ").pop() || "";
+                const emojiT = tPlanet.split(" ").pop() || "";
+                const emojiAsp = aName.split(" ").pop() || "";
+
+                html += `<li>${emojiT} ${emojiAsp} ${emojiN} — Транзитное <b>${tPlanet.split(" ")[0]}</b> делает <b>${aName.split(" ")[0]}</b> к вашему натальному <b>${nPlanet.split(" ")[0]}</b> (орбис: ${a.orb}°).</li>`;
             });
         } else {
             html += `<li><i>На текущую секунду точных планетарных транзитов нет. Небо спокойно.</i></li>`;
         }
         html += `</ul>`;
-        
         document.getElementById("text-output").innerHTML = html;
     },
 
     generateMetricsHtml(sd) {
-        let html = `<div style="margin-top: 20px; padding-top: 15px; border-top: 1px dashed #334155;">`;
-        if (sd.activatedOuterPlanets.length > 0) {
-            html += `<p style="font-size:12px; color:#a7f3d0; background:#065f46; padding:6px 12px; border-radius:6px; margin-bottom:15px;">
+        if (!sd) return '<p>Нет данных для анализа</p>';
+        
+        let html = `<div style="margin-top: 20px; padding-top: 15px; border-top: 1px dashed #eae2d5;">`;
+        
+        if (sd.activatedOuterPlanets && sd.activatedOuterPlanets.length > 0) {
+            html += `<p style="font-size:12px; color:#065f46; background:#ecfdf5; padding:8px 12px; border-radius:6px; margin-bottom:15px; border:1px solid #a7f3d0;">
                 ℹ️ <b>Высшие планеты:</b> Поскольку ${sd.activatedOuterPlanets.join(", ")} аспектируют Луну, они включены в баланс стихий (+1 балл).
             </p>`;
         }
 
-        html += `<h5>🔥 Баланс Стихий:</h5><div style="margin-bottom:15px;">`;
-        for (const [el, score] of Object.entries(sd.elementsScore)) {
-            const pct = sd.totalScore > 0 ? Math.round((score / sd.totalScore) * 100) : 0;
-            html += `<div style="margin-bottom: 8px;">
-                <span style="display:inline-block; width:100px;"><b>${el}:</b></span> 
-                <span style="color:#38bdf8;">${score} б. (${pct}%)</span>
-                <div style="background:#0f172a; border:1px solid #475569; height:8px; border-radius:4px; margin-top:4px;">
-                    <div style="background:#38bdf8; width:${pct}%; height:100%; border-radius:3px;"></div>
-                </div>
-            </div>`;
+        // Баланс стихий
+        if (sd.elementsScore) {
+            html += `<h5>🔥 Баланс Стихий:</h5><div style="margin-bottom:15px;">`;
+            const totalScore = sd.totalScore || 0;
+            for (const [el, score] of Object.entries(sd.elementsScore)) {
+                const pct = totalScore > 0 ? Math.round((score / totalScore) * 100) : 0;
+                html += `<div style="margin-bottom: 8px;">
+                    <span style="display:inline-block; width:100px;"><b>${el}:</b></span> 
+                    <span style="color:#b45309; font-weight:600;">${score} б. (${pct}%)</span>
+                </div>`;
+            }
+            html += `</div>`;
         }
-        html += `</div><h5>🌀 Баланс Крестов:</h5>`;
-        for (const [cr, score] of Object.entries(sd.crossesScore)) {
-            const pct = sd.totalScore > 0 ? Math.round((score / sd.totalScore) * 100) : 0;
-            html += `<div style="margin-bottom: 5px;">
-                <span style="display:inline-block; width:140px;"><b>${cr}:</b></span> 
-                <span style="color:#4ade80;">${score} б. (${pct}%)</span>
-            </div>`;
+
+        // Баланс крестов
+        if (sd.crossesScore) {
+            html += `<h5>🌀 Баланс Крестов:</h5><div style="margin-bottom:15px;">`;
+            const totalScore = sd.totalScore || 0;
+            for (const [cr, score] of Object.entries(sd.crossesScore)) {
+                const pct = totalScore > 0 ? Math.round((score / totalScore) * 100) : 0;
+                html += `<div style="margin-bottom: 8px;">
+                    <span style="display:inline-block; width:100px;"><b>${cr}:</b></span> 
+                    <span style="color:#b45309; font-weight:600;">${score} б. (${pct}%)</span>
+                </div>`;
+            }
+            html += `</div>`;
         }
+
         html += `</div>`;
         return html;
     }
