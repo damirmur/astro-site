@@ -5,14 +5,17 @@ import (
 
 	"astro-site/internal/astrology/controllers"
 	"astro-site/internal/astrology/models"
+	"astro-site/internal/astrology/swissephe"
 
 	"github.com/pocketbase/pocketbase/apis"
 	"github.com/pocketbase/pocketbase/core"
 )
 
-func RegisterAstrologyRoutes(se *core.ServeEvent, defaultSettings models.UserSettings, aiFallback models.AiConfig) {
-	
-	se.Router.POST("/api/auth/telegram", controllers.HandleTelegramAuth)
+func RegisterAstrologyRoutes(se *core.ServeEvent, defaultSettings swissephe.UserSettings, aiFallback models.AiConfig) {
+
+	se.Router.POST("/api/auth", func(re *core.RequestEvent) error {
+		return controllers.HandleAuth(re)
+	})
 
 	se.Router.GET("/api/astrology/settings", func(re *core.RequestEvent) error {
 		return controllers.HandleGetSettings(re, defaultSettings)

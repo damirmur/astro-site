@@ -5,6 +5,7 @@ import (
 
 	"astro-site/internal/astrology"
 	"astro-site/internal/astrology/models"
+	"astro-site/internal/astrology/swissephe"
 
 	"github.com/pocketbase/pocketbase"
 	"github.com/pocketbase/pocketbase/apis"
@@ -19,7 +20,7 @@ func main() {
 	migratecmd.MustRegister(app, app.RootCmd, migratecmd.Config{Automigrate: true})
 	ghupdate.MustRegister(app, app.RootCmd, ghupdate.Config{})
 
-	defaultSettings := models.UserSettings{
+	defaultSettings := swissephe.UserSettings{
 		Planets:    []string{"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "12"},
 		Aspects:    []string{"0", "72", "90", "120", "180"},
 		TransitOrb: "1", Houses: "P", Rotate: "0", Direction: "clockwise", TZ: "Asia/Yekaterinburg", Locale: "ru-RU", City: "Orenburg", Latitude: 51.73, Longitude: 55.10,

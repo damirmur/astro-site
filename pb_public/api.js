@@ -11,15 +11,18 @@ const ApiService = {
         };
     },
 
-    async loginTelegram(userData) {
-        const res = await fetch(`${this.getUrl()}/api/auth/telegram`, {
-            method: 'POST',
-			headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(userData)
-        });
-        if (!res.ok) throw new Error('Ошибка авторизации на сервере');
-        return res.json();
-    },
+async login(provider, userData) {
+    const res = await fetch(`${this.getUrl()}/api/auth`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+            provider: provider, // 'telegram', 'vk', etc.
+            data: userData
+        })
+    });
+    if (!res.ok) throw new Error('Ошибка авторизации на сервере');
+    return res.json();
+},
 
     async getSettings() {
         const res = await fetch(`${this.getUrl()}/api/astrology/settings`, { headers: this.getHeaders() });

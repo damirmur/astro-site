@@ -1,4 +1,4 @@
-package models
+package swissephe
 
 /*
 #cgo CFLAGS: -I${SRCDIR}/../../../include
