@@ -31,7 +31,6 @@ summary { font-weight: bold; color: #c2410c; outline: none; font-size: 16px; pad
 
 .hidden { display: none !important; }
 
-/* 6. Исправленная сетка полей ввода: теперь все элементы (включая дату) 100% равны друг другу */
 .form-grid { 
     display: grid; 
     grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); 
@@ -107,7 +106,6 @@ input:focus, select:focus { border-color: #ea580c; box-shadow: 0 0 0 3px rgba(23
 
 .user-info { background: #f1ece4; padding: 12px 20px; border-radius: 8px; margin-bottom: 25px; font-size: 15px; border-left: 4px solid #ea580c; color: #44403c; }
 
-/* 3. Изменили настройки textarea на автоматическую подстройку высоты контента */
 pre, textarea { 
     background: #f8f6f0 !important; 
     color: #0f172a !important; 

@@ -26,6 +26,7 @@ function showApp() {
     UiService.renderUserPanel(user);
     loadSettings();
     loadHoroscopes();
+    loadTodoItems();
 }
 
 async function loadHoroscopes() {
@@ -45,6 +46,85 @@ async function loadHoroscopes() {
     } catch (err) { console.error("Ошибка архива:", err); }
 }
 
+async function loadTodoItems() {
+    try {
+        const items = await ApiService.getTodoItems();
+        UiService.renderTodoList(items);
+    } catch (err) { console.error("Ошибка загрузки задач:", err); }
+}
+// Добавление задачи
+async function handleAddTodo() {
+    const title = document.getElementById("new-todo-title").value;
+    const description = document.getElementById("new-todo-description").value; // Добавлено
+    const priority = document.getElementById("new-todo-priority").value;
+    const due_date = document.getElementById("new-todo-date").value;
+
+    if (!title) return alert("Заголовок обязателен");
+
+    try {
+        await ApiService.createTodoItem({
+            title: title,
+            description: description, // Передаем описание
+            priority: priority,        // Теперь будет "low", "medium" или "high"
+            due_date: due_date,       // Будет дата в формате YYYY-MM-DD
+            status: "todo",            // Значение по умолчанию из вашего списка select
+            completed: false
+        });
+        
+        // Очистка полей после успеха
+        document.getElementById("new-todo-title").value = "";
+        document.getElementById("new-todo-description").value = "";
+        document.getElementById("new-todo-date").value = "";
+        
+        loadTodoItems();
+    } catch (err) { alert(err.message); }
+}
+
+// Функция редактирования (добавляем описание в prompt)
+async function editTodoRow(id, title, status, priority, dueDate, description) { // Добавили параметр description
+    const newTitle = prompt("Редактировать заголовок:", title);
+    if (newTitle === null) return;
+    
+    const newDescription = prompt("Редактировать описание:", description || "");
+    if (newDescription === null) return;
+
+    const newStatus = prompt("Статус (todo, in_progress, review, completed):", status);
+    if (newStatus === null) return;
+
+    const newPriority = prompt("Приоритет (low, medium, high):", priority);
+    if (newPriority === null) return;
+
+    const newDueDate = prompt("Дата (YYYY-MM-DD):", dueDate);
+    if (newDueDate === null) return;
+
+    try {
+        await ApiService.updateTodoItem(id, {
+            title: newTitle,
+            description: newDescription,
+            status: newStatus,
+            priority: newPriority,
+            due_date: newDueDate
+        });
+        loadTodoItems();
+    } catch (err) { alert(err.message); }
+}
+
+// Переключение статуса завершенности
+async function toggleTodoStatus(id, currentStatus) {
+    try {
+        await ApiService.updateTodoItem(id, { completed: !currentStatus });
+        loadTodoItems();
+    } catch (err) { alert(err.message); }
+}
+
+// Удаление задачи 
+async function deleteTodoItem(id, title) {
+    if (!confirm(`Удалить задачу "${title}"?`)) return;
+    try {
+        await ApiService.deleteTodoItem(id);
+        loadTodoItems();
+    } catch (err) { alert(err.message); }
+}
 function selectNatalCard(id, title, dateStr) {
     currentNatalId = id;
     document.getElementById("selected-natal-name").innerText = `"${title}" от ${dateStr}`;
@@ -146,7 +226,6 @@ async function calculateTransit() {
     }
 }
 
-// ВОЗВРАЩЕННАЯ ИСПРАВЛЕННАЯ ФУНКЦИЯ ИНТЕРПРЕТАЦИИ ИИ
 async function interpretAi(type) {
     if (!currentNatalId) {
         return alert("Сначала выберите активную карту в архиве!");

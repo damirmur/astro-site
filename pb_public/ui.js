@@ -18,6 +18,56 @@ const UiService = {
             document.getElementById("geo-lon").value = data.longitude;
         }
     },
+    renderTodoList(items) {
+        const container = document.getElementById("todo-list-container");
+        if (!items || items.length === 0) {
+            container.innerHTML = `<p style="color:#94a3b8; font-style:italic;">Список задач пуст.</p>`;
+            return;
+        }
+
+        let html = `<table>
+            <tr style="background: #f1ece4;">
+                <th style="text-align:left;">Заголовок</th>
+                <th style="text-align:left;">Статус</th>
+                <th style="text-align:left;">Приоритет</th>
+                <th style="text-align:left;">Срок</th>
+                <th style="text-align:center;">Действия</th>
+            </tr>`;
+
+        items.forEach(item => {
+            const isCompleted = item.completed;
+            const rowClass = isCompleted ? "style='opacity: 0.6; text-decoration: line-through;'" : "";
+            
+// Внутри UiService.renderTodoList исправьте строку с кнопкой редактирования:
+html += `<tr ${rowClass}>
+    <td style="font-weight:600;">${item.title}</td>
+    <td><span style="font-size:12px; padding:2px 6px; border-radius:4px; background:#e2e8f0;">${item.status}</span></td>
+    <td>${item.priority}</td>
+    <td>${item.due_date || '—'}</td>
+    <td style="text-align:center;">
+        <button onclick="toggleTodoStatus('${item.id}', ${isCompleted})" class="btn" style="padding:4px 8px; font-size:11px; background:#3b82f6;">✅</button>
+        <!-- Добавили item.description в параметры -->
+        <button onclick="editTodoRow('${item.id}', '${item.title.replace(/'/g, "\\'")}', '${item.status}', '${item.priority}', '${item.due_date}', '${item.description || ""}')" class="btn" style="padding:4px 8px; font-size:11px; background:#f59e0b;">✏️</button>
+        <button onclick="deleteTodoItem('${item.id}', '${item.title.replace(/'/g, "\\'")}')" class="btn-danger" style="padding:4px 8px; font-size:11px;">🗑️</button>
+    </td>
+</tr>`;
+        });
+        html += `</table>`;
+        container.innerHTML = html;
+    },
+
+    // Вспомогательная функция для отображения режима редактирования (простая реализация через prompt или inline)
+    renderEditMode(id, title, status, priority, dueDate) {
+        const newTitle = prompt("Редактировать заголовок:", title);
+        if (newTitle === null) return null;
+        const newStatus = prompt("Статус (todo, in_progress, review, completed):", status);
+        if (newStatus === null) return null;
+        const newPriority = prompt("Приоритет (low, medium, high):", priority);
+        if (newPriority === null) return null;
+        const newDueDate = prompt("Дата (YYYY-MM-DD):", dueDate);
+
+        return { title: newTitle, status: newStatus, priority: newPriority, due_date: newDueDate };
+    },
 
     renderHoroscopesList(items, selectedId) {
         const container = document.getElementById("horoscopes-list-container");

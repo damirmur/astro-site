@@ -27,12 +27,11 @@
         <!-- КЛИЕНТСКАЯ ПАНЕЛЬ -->
         <div id="app-block" class="card hidden">
             <div class="user-info">
-                <!-- 2. Убрали отображение ID пользователя -->
                 Привет, <span id="user-name">Гость</span>!
                 <button onclick="logout()" class="btn-danger">Выйти</button>
             </div>
 
-            <!-- 1. НАСТРОЙКИ В ВИДЕ СВОРУЧИВАЕМОЙ ФОРМЫ -->
+            <!-- 1. НАСТРОЙКИ В ВИДЕ СВОРАЧИВАЕМОЙ ФОРМЫ -->
             <details class="section-card">
                 <summary>🛠️ Настройки профиля (Нажмите, чтобы открыть)</summary>
                 <div class="form-grid">
@@ -69,6 +68,39 @@
 
                 <button onclick="saveSettings()" class="btn" style="margin-top:10px;">Сохранить настройки</button>
             </details>
+            <!-- Список задач -->
+<details class="section-card" style="border-color: #16a34a;">
+    <summary style="color:#16a34a;">✅ Мои задачи (Todo)</summary>
+<div id="todo-form-container" style="margin-bottom: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px; border: 1px solid #e2e8f0;">
+    <h4 style="margin-top:0; color:#16a34a;">➕ Добавить новую задачу</h4>
+    <div class="form-grid">
+        <div class="form-group" style="grid-column: span 2;">
+            <label>Заголовок:</label>
+            <input type="text" id="new-todo-title" placeholder="Что нужно сделать?">
+        </div>
+        <div class="form-group" style="grid-column: span 2;">
+            <label>Описание:</label>
+            <textarea id="new-todo-description" placeholder="Подробности..." style="min-height: 80px;"></textarea>
+        </div>
+        <div class="form-group">
+            <label>Приоритет:</label>
+            <select id="new-todo-priority">
+                <option value="low">Low</option>
+                <option value="medium" selected>Medium</option>
+                <option value="high">High</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label>Срок:</label>
+            <input type="date" id="new-todo-date">
+        </div>
+    </div>
+    <button onclick="handleAddTodo()" class="btn" style="margin-top:10px; background:#16a34a;">Добавить</button>
+</div>
+    <div id="todo-list-container" style="margin-top:10px;">
+        <p>Загрузка задач...</p>
+    </div>
+</details>
 
             <!-- 1.2 СВЕРНУТАЯ БАЗА ГОРОСКОПОВ -->
             <details class="section-card" style="border-color: #ea580c;" id="horoscopes-details">
@@ -79,10 +111,8 @@
                 </div>
             </details>
             
-            <!-- 4. Индикатор переименован (Title + Дата/Время подставим через JS) -->
-            <div class="active-radix-card">
-                <span><b>Выбранная карта радикса для транзитов:</b></span> 
-                <span id="selected-natal-name" style="color:#b45309; font-weight:bold; margin-left:5px;">Загрузка архива...</span>
+            <div class="active-radix-card"> <span><b>Выбранная карта радикса для транзитов:</b></span> <span id="selected-natal-name" style="color:#b45309; font-weight:bold; margin-left:5px;">Загрузка 
+                архива...</span>
             </div>
 
             <!-- 2. АСТРОЛОГИЧЕСКИЕ РАСЧЕТЫ -->
@@ -93,8 +123,6 @@
                         <label>Название расчета (Title):</label>
                         <input type="text" id="calc-title" placeholder="Если пусто — будет дата/время">
                     </div>
-                    <!-- 5. Заменили "рождения" на "события" -->
-                    <!-- 6. Поле ввода даты-времени теперь обернуто стандартно для автовыравнивания -->
                     <div class="form-group">
                         <label>Дата и время события (UTC):</label>
                         <input type="datetime-local" id="birth-date">
@@ -114,7 +142,6 @@
                 </div>
             </div>
 
-            <!-- 8. Заменили заголовок блока ИИ -->
             <div class="card" style="border-color: #ea580c; background: #fffdfa;">
                 <h3 style="color:#9a3412;">🤖 Интерпретация от астропсихолога-ИИ</h3>
                 <p style="font-size:13px; color:#b45309; margin-top:-5px;">Запустите анализ выбранной карты через нейросеть:</p>
@@ -131,7 +158,6 @@
                 <div id="text-output" class="text-report">Нажмите кнопку для запуска расчета...</div>
             </div>
 
-            <!-- 10. Убрали слово "Сырой" из заголовка -->
             <details class="section-card" style="margin-top:20px;">
                 <summary>💻 JSON ответ (Для разработчиков)</summary>
                 <pre id="json-output">Здесь появится technical log...</pre>
