@@ -179,7 +179,56 @@ go build -o astro-site ./cmd/astro-site/
 - swe_houses() — расчёт домов
 - swe_house_pos() — определение номера дома
 ```
+# Astro3D.ru Frontend Project
 
+## Overview
+This project is the frontend for the Astro3D.ru website, providing a web interface for astrological calculations, specifically focused on natal charts (radixes) and planetary transits. It allows users to interact with astronomical data, manage personal records, and receive AI-driven interpretations.
+
+## Key Features
+
+### 1. Authentication
+*   **Provider**: Telegram Login Widget (`astro3dAI_bot`).
+*   **Mechanism**: Users authenticate via Telegram; the system stores a session token in `localStorage` for subsequent API requests.
+
+### 2. User Profile & Settings
+*   **Default Parameters**: Users can save and load personal settings:
+    *   City, Latitude, Longitude, and Timezone.
+    *   House System (Placidus, Koch, Equal).
+    *   Custom JSON parameters for advanced engine configuration.
+
+### 3. Horoscope Database (Collections)
+*   **Management**: Users can maintain a private archive of their charts.
+*   **Functionality**:
+    *   List records filtered by user ID.
+    *   Select a specific natal chart from the list to use as a base for transit calculations.
+    *   Delete unnecessary records from the database.
+
+### 4. Astrological Calculations
+*   **Natal Chart (Radix)**: Calculate a birth/event chart based on date, time, and geographic coordinates. Returns unique IDs for each calculation.
+*   **Transit Calculation**: Generate current planetary transits. Can be linked to a specific natal chart ID to see how planets move relative to the user's houses.
+
+### 5. AI Interpretation (Astropsychologist)
+The system provides three distinct modes of analysis powered by an AI model:
+1.  **Natal Analysis**: A detailed breakdown of the birth chart.
+2.  **Current Sky Situation**: An interpretation of current planetary transits.
+3.  **Combined Analysis**: Synthesis of transits within the specific houses of the user's natal chart.
+
+## Technical Stack & Structure
+*   **Frontend**: Vanilla JavaScript, HTML5, CSS3.
+*   **API Interaction**: Centralized via `ApiService` in `api.js`.
+*   **Data Flow**:
+    *   `index.html`: UI structure and buttons.
+    *   `styles.css`: Card-based layout and styling.
+    *   `app.js` / `ui.js`: Logic for handling user interactions and updating the DOM.
+    *   `api.js`: Fetch requests to backend endpoints (auth, settings, collections, astrology, interpret).
+
+## API Endpoints Summary
+*   `POST /api/auth/telegram`: User login.
+*   `GET/POST /api/astrology/settings`: Manage user preferences.
+*   `GET/DELETE /api/collections/horoscopes/records`: Manage the chart database.
+*   `GET /api/astrology/chart`: Generate natal charts.
+*   `GET /api/astrology/transit`: Generate transit data.
+*   `POST /api/astrology/interpret`: Get AI-generated analysis (types: natal, transit, full).
 ## Лицензия
 
 MIT License — свободное использование, модификация и распространение.
