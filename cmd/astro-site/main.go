@@ -22,7 +22,7 @@ func main() {
 
 	defaultSettings := swissephe.UserSettings{
 		Planets:    []string{"0", "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "12"},
-		Aspects:    []string{"0", "72", "90", "120", "180"},
+		Aspects:    []string{"0", "60", "90", "120", "180"},
 		TransitOrb: "1", Houses: "P", Rotate: "0", Direction: "clockwise", TZ: "Asia/Yekaterinburg", Locale: "ru-RU", City: "Orenburg", Latitude: 51.73, Longitude: 55.10,
 		NatalOrb:   map[string]int{"0": 10, "1": 9, "2": 7, "3": 7, "4": 7, "5": 6, "6": 6, "7": 5, "8": 5, "9": 5, "10": 5, "12": 3},
 	}

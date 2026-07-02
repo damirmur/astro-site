@@ -39,7 +39,46 @@ async login(provider, userData) {
         if (!res.ok) throw new Error('Ошибка сохранения настроек');
         return res.json();
     },
+//TODO_ITEMS
+    async getTodoItems() {
+        const url = `${this.getUrl()}/api/todo/items`;
+        const res = await fetch(url, { headers: this.getHeaders() });
+        if (!res.ok) throw new Error('Не удалось загрузить задачи');
+        return res.json(); // В контроллере мы возвращаем массив напрямую
+    },
 
+    async createTodoItem(data) {
+        const url = `${this.getUrl()}/api/todo/items`;
+        const res = await fetch(url, {
+            method: 'POST',
+            headers: this.getHeaders(),
+            body: JSON.stringify(data)
+        });
+        if (!res.ok) throw new Error('Не удалось создать задачу');
+        return res.json();
+    },
+
+    async updateTodoItem(id, data) {
+        const url = `${this.getUrl()}/api/todo/items/${id}`;
+        const res = await fetch(url, {
+            method: 'PUT',
+            headers: this.getHeaders(),
+            body: JSON.stringify(data)
+        });
+        if (!res.ok) throw new Error('Не удалось обновить задачу');
+        return res.json();
+    },
+
+    async deleteTodoItem(id) {
+        const url = `${this.getUrl()}/api/todo/items/${id}`;
+        const res = await fetch(url, {
+            method: 'DELETE',
+            headers: this.getHeaders()
+        });
+        if (!res.ok) throw new Error('Не удалось удалить задачу');
+        return true;
+    },
+//Horoscopes
     async getHoroscopesList() {
         const user = JSON.parse(localStorage.getItem("user"));
         if (!user) return [];
@@ -50,7 +89,6 @@ async login(provider, userData) {
         return data.items || [];
     },
 
-    // НОВЫЙ МЕТОД: Удаление записи из коллекции horoscopes по ID
     async deleteHoroscope(id) {
         const url = `${this.getUrl()}/api/collections/horoscopes/records/${id}`;
         const res = await fetch(url, {
@@ -67,7 +105,6 @@ async login(provider, userData) {
         if (!res.ok) throw new Error('Ошибка вычисления натальной карты');
         return res.json();
     },
-
     async getTransitChart(natalId = "") {
         let url = `${this.getUrl()}/api/astrology/transit`;
         if (natalId) {
