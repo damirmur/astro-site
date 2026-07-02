@@ -15,7 +15,7 @@
         <div id="auth-block" class="card">
             <h3>Вход в систему</h3>
             <p>Для расчета натальной карты и транзитов авторизуйтесь через Telegram:</p>
-            <script async src="https://telegram.org" 
+            <script async src="https://telegram.org/js/telegram-widget.js" 
                 data-telegram-login="astro3dAI_bot" 
                 data-size="large" 
                 data-onauth="onTelegramAuth(user)" 
@@ -115,7 +115,7 @@
             <!-- 8. Заменили заголовок блока ИИ -->
             <div class="card" style="border-color: #ea580c; background: #fffdfa;">
                 <h3 style="color:#9a3412;">🤖 Интерпретация от астропсихолога-ИИ</h3>
-                <p style="font-size:13px; color:#b45309; margin-top:-5px;">Запустите анализ выбранной карты через нейросеть LM Studio во внутренней сети:</p>
+                <p style="font-size:13px; color:#b45309; margin-top:-5px;">Запустите анализ выбранной карты через нейросеть:</p>
                 <div class="btn-group">
                     <button onclick="interpretAi('natal')" class="btn btn-ai-natal">1. Разбор Натала 📜</button>
                     <button onclick="interpretAi('transit')" class="btn btn-ai-transit">2. Обстановка на небе ☁️</button>
