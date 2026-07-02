@@ -5,13 +5,13 @@ import (
 	"strconv"
 	"time"
 
-	"astro-site/internal/astrology/models"
+	"astro-site/internal/astrology/swissephe"
 
 	"github.com/pocketbase/pocketbase/core"
 	"github.com/pocketbase/pocketbase/apis"
 )
 
-func HandleComputeNatal(re *core.RequestEvent, defaultSettings models.UserSettings) error {
+func HandleComputeNatal(re *core.RequestEvent, defaultSettings swissephe.UserSettings) error {
 	authRecord := re.Auth
 	if authRecord == nil { return apis.NewUnauthorizedError("Неавторизован", nil) }
 	dateStr := re.Request.URL.Query().Get("date")
@@ -22,7 +22,7 @@ func HandleComputeNatal(re *core.RequestEvent, defaultSettings models.UserSettin
 	currentSettings := defaultSettings
 	userSettingsRecord, err := re.App.FindFirstRecordByData("user_settings", "user", authRecord.Id)
 	if err == nil {
-		var us models.UserSettings
+		var us swissephe.UserSettings
 		if err := userSettingsRecord.UnmarshalJSONField("settings_data", &us); err == nil { currentSettings = us }
 	}
 
@@ -33,7 +33,7 @@ func HandleComputeNatal(re *core.RequestEvent, defaultSettings models.UserSettin
 	lon, _ := strconv.ParseFloat(lonStr, 64)
 
 	// Вызов конструктора калькулятора напрямую из пакета моделей
-	calc := models.NewCalculator("./ephe")
+	calc := swissephe.NewCalculator("./ephe")
 	defer calc.Close()
 
 	result, err := calc.ComputeNatal(context.Background(), t, lat, lon, currentSettings.Houses, currentSettings)
@@ -52,7 +52,7 @@ func HandleComputeNatal(re *core.RequestEvent, defaultSettings models.UserSettin
 	return re.JSON(200, result)
 }
 
-func HandleComputeTransit(re *core.RequestEvent, defaultSettings models.UserSettings) error {
+func HandleComputeTransit(re *core.RequestEvent, defaultSettings swissephe.UserSettings) error {
 	authRecord := re.Auth
 	if authRecord == nil { return apis.NewUnauthorizedError("Неавторизован", nil) }
 
@@ -70,18 +70,18 @@ func HandleComputeTransit(re *core.RequestEvent, defaultSettings models.UserSett
 
 	if err != nil || natalRecord == nil { return apis.NewBadRequestError("Натальная карта не найдена.", nil) }
 
-	var natalChart models.AstroResult
+	var natalChart swissephe.AstroResult
 	if err := natalRecord.UnmarshalJSONField("astrological_data", &natalChart); err != nil { return apis.NewBadRequestError("Ошибка чтения натала", err) }
 
 	currentSettings := defaultSettings
 	userSettingsRecord, err := re.App.FindFirstRecordByData("user_settings", "user", authRecord.Id)
 	if err == nil {
-		var us models.UserSettings
+		var us swissephe.UserSettings
 		if err := userSettingsRecord.UnmarshalJSONField("settings_data", &us); err == nil { currentSettings = us }
 	}
 
 	transitTime := time.Now()
-	calc := models.NewCalculator("./ephe")
+	calc := swissephe.NewCalculator("./ephe")
 	defer calc.Close()
 
 	transitResult, err := calc.ComputeTransit(context.Background(), transitTime, natalChart.Planets, natalChart.Houses, currentSettings.Houses, currentSettings)

@@ -14,7 +14,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
 async function onTelegramAuth(user) {
     try {
-        const data = await ApiService.loginTelegram(user);
+        const data = await ApiService.login('telegram',user);
         localStorage.setItem("token", data.token);
         localStorage.setItem("user", JSON.stringify(data.record));
         showApp();

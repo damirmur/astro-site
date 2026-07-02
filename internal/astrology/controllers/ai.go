@@ -7,13 +7,14 @@ import (
 	"time"
 
 	"astro-site/internal/astrology/models"
+	"astro-site/internal/astrology/swissephe"
 
 	"github.com/pocketbase/pocketbase/apis"
 	"github.com/pocketbase/pocketbase/core"
 
 )
 
-func HandleAiInterpretation(re *core.RequestEvent, defaultSettings models.UserSettings, aiFallback models.AiConfig) error {
+func HandleAiInterpretation(re *core.RequestEvent, defaultSettings swissephe.UserSettings, aiFallback models.AiConfig) error {
 	authRecord := re.Auth
 	if authRecord == nil { return apis.NewUnauthorizedError("Неавторизован", nil) }
 
@@ -24,7 +25,7 @@ func HandleAiInterpretation(re *core.RequestEvent, defaultSettings models.UserSe
 	natalRecord, err := re.App.FindRecordById("horoscopes", body.NatalID)
 	if err != nil { return apis.NewBadRequestError("Гороскоп не найден", err) }
 	
-	var natalData models.AstroResult
+	var natalData swissephe.AstroResult
 	natalRecord.UnmarshalJSONField("astrological_data", &natalData)
 
 	aiConfig := aiFallback
@@ -42,7 +43,7 @@ func HandleAiInterpretation(re *core.RequestEvent, defaultSettings models.UserSe
 		
 	case "transit":
 		currentSettings := defaultSettings
-		calc := models.NewCalculator("./ephe")
+		calc := swissephe.NewCalculator("./ephe")
 		defer calc.Close()
 		transitResult, _ := calc.ComputeTransit(context.Background(), time.Now(), natalData.Planets, natalData.Houses, currentSettings.Houses, currentSettings)
 		
@@ -51,7 +52,7 @@ func HandleAiInterpretation(re *core.RequestEvent, defaultSettings models.UserSe
 
 	case "full":
 		currentSettings := defaultSettings
-		calc := models.NewCalculator("./ephe")
+		calc := swissephe.NewCalculator("./ephe")
 		defer calc.Close()
 		transitResult, _ := calc.ComputeTransit(context.Background(), time.Now(), natalData.Planets, natalData.Houses, currentSettings.Houses, currentSettings)
 
