@@ -1,5 +1,16 @@
 package models
 
+import (
+	"bytes"
+	"context"
+	"encoding/json"
+	"fmt"
+	"net/http"
+	"strings"
+	"time"
+
+	"github.com/pocketbase/pocketbase/core"
+)
 type AiConfig struct {
 	Endpoint     string  `json:"endpoint"`
 	ModelID      string  `json:"model_id"`
@@ -13,17 +24,6 @@ type InterpretRequest struct {
 	NatalID string `json:"natal_id"`
 }
 
-import (
-	"bytes"
-	"context"
-	"encoding/json"
-	"fmt"
-	"net/http"
-	"strings"
-	"time"
-
-	"github.com/pocketbase/pocketbase/core"
-)
 
 type OpenAIRequest struct {
 	Model       string    `json:"model"`
