@@ -65,7 +65,7 @@ async function handleAddTodo() {
         await ApiService.createTodoItem({
             title: title,
             description: description, // Передаем описание
-            priority: priority,        // Теперь будет "low", "medium" или "high"
+            priority: priority,        // Теперь будет "note", "low", "medium" или "high"
             due_date: due_date,       // Будет дата в формате YYYY-MM-DD
             status: "todo",            // Значение по умолчанию из вашего списка select
             completed: false
@@ -91,7 +91,7 @@ async function editTodoRow(id, title, status, priority, dueDate, description) { 
     const newStatus = prompt("Статус (todo, in_progress, review, completed):", status);
     if (newStatus === null) return;
 
-    const newPriority = prompt("Приоритет (low, medium, high):", priority);
+    const newPriority = prompt("Приоритет (low, medium, high, note):", priority);
     if (newPriority === null) return;
 
     const newDueDate = prompt("Дата (YYYY-MM-DD):", dueDate);
