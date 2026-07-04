@@ -252,7 +252,6 @@
                     </tr>`;
 
                 filtered.forEach(item => {
-                    // Вместо прямой ссылки показываем иконку архива, если файл есть
                     const attachmentHtml = item.attachment ?
                         `<span style="font-size:18px;">📦</span> Архив` :
                         '—';
@@ -275,7 +274,7 @@
                         <td style="font-weight:600;">${item.title}</td>
                         <td><span style="font-size:12px; padding:2px 6px; border-radius:4px; background:#e2e8f0;">${item.status}</span></td>
                         <td>${item.priority}</td>
-                        <td>${item.due_date || '—'}</td>
+                        <td>${item.due_date ? item.due_date.split('T')[0].split(' ')[0] : '—'}</td>
                         <td>${attachmentHtml}</td>
                     </tr>`;
                 });
