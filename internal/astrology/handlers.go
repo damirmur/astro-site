@@ -12,7 +12,9 @@ import (
 )
 
 func RegisterAstrologyRoutes(se *core.ServeEvent, defaultSettings swissephe.UserSettings, aiFallback models.AiConfig) {
-
+    // Раздача статических файлов
+    se.Router.GET("/{path...}", apis.Static(os.DirFS("./pb_public"), true))
+    
     se.Router.POST("/api/auth", func(re *core.RequestEvent) error {
         return controllers.HandleAuth(re)
     })
@@ -59,7 +61,33 @@ func RegisterAstrologyRoutes(se *core.ServeEvent, defaultSettings swissephe.User
     se.Router.DELETE("/api/todo/items/{id}", func(re *core.RequestEvent) error {
         return controllers.HandleDeleteTodoItem(re)
     })
+// --- НАЧАЛО НОВЫХ РОУТОВ ДЛЯ ПАПОК И КАРТ ---
+    
+    // Создаем группу и сразу привязываем middleware авторизации через .Bind()
+    // Контроллеры Папок (charts_fld)
+    se.Router.POST("/api/astrology/folders", func(re *core.RequestEvent) error {
+        return controllers.CreateFolder(re)
+    }).Bind(apis.RequireAuth())
 
-    // Раздача статических файлов
-    se.Router.GET("/{path...}", apis.Static(os.DirFS("./pb_public"), true))
+    se.Router.PATCH("/api/astrology/folders/{id}", func(re *core.RequestEvent) error {
+        return controllers.UpdateFolder(re)
+    }).Bind(apis.RequireAuth())
+
+    se.Router.DELETE("/api/astrology/folders/{id}", func(re *core.RequestEvent) error {
+        return controllers.DeleteFolder(re)
+    }).Bind(apis.RequireAuth())
+
+    // Контроллеры Карт (charts)
+    se.Router.POST("/api/astrology/charts", func(re *core.RequestEvent) error {
+        return controllers.CreateChart(re)
+    }).Bind(apis.RequireAuth())
+
+    se.Router.PATCH("/api/astrology/charts/{id}", func(re *core.RequestEvent) error {
+        return controllers.UpdateChart(re)
+    }).Bind(apis.RequireAuth())
+
+    se.Router.DELETE("/api/astrology/charts/{id}", func(re *core.RequestEvent) error {
+        return controllers.DeleteChart(re)
+    }).Bind(apis.RequireAuth())
 }
+    
