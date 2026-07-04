@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="ru">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,163 +8,91 @@
     <!-- Объединенные стили -->
     <style>
         /* === БЛАГОРОДНАЯ СВЕТЛАЯ И ВОЗДУШНАЯ ПАЛИТРА === */
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background: #fdfbf7;
-            color: #292524;
-            padding: 20px;
-            line-height: 1.6;
+        body { 
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; 
+            background: #fdfbf7; 
+            color: #292524; 
+            padding: 20px; 
+            line-height: 1.6; 
         }
-
-        .container {
-            max-width: 1000px;
-            margin: 0 auto;
+        .container { max-width: 1000px; margin: 0 auto; }
+        h1 { text-align: center; color: #b45309; margin-bottom: 30px; font-weight: 400; letter-spacing: 0.5px; }
+        h3, h4, h5 { margin-top: 0; color: #78350f; }
+        .card { 
+            background: #ffffff; 
+            padding: 25px; 
+            border-radius: 12px; 
+            margin-bottom: 20px; 
+            box-shadow: 0 4px 20px -2px rgba(120,53,15,0.08), 0 2px 8px -1px rgba(0,0,0,0.04); 
+            border: 1px solid #f1ece4; 
         }
-
-        h1 {
-            text-align: center;
-            color: #b45309;
-            margin-bottom: 30px;
-            font-weight: 400;
-            letter-spacing: 0.5px;
+        .section-card { 
+            background: #fbf9f4; 
+            padding: 15px 20px; 
+            border-radius: 12px; 
+            border: 1px solid #eae2d5; 
+            margin-bottom: 20px; 
+            cursor: pointer; 
         }
-
-        h3,
-        h4,
-        h5 {
-            margin-top: 0;
-            color: #78350f;
+        .section-card[open] { padding-bottom: 25px; cursor: default; background: #ffffff; }
+        summary { font-weight: bold; color: #c2410c; outline: none; font-size: 16px; padding: 5px 0; }
+        .hidden { display: none !important; }
+        .form-grid { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr)); 
+            gap: 15px; 
+            margin-top: 15px; 
         }
-
-        .card {
-            background: #ffffff;
-            padding: 25px;
-            border-radius: 12px;
-            margin-bottom: 20px;
-            box-shadow: 0 4px 20px -2px rgba(120, 53, 15, 0.08), 0 2px 8px -1px rgba(0, 0, 0, 0.04);
-            border: 1px solid #f1ece4;
-        }
-
-        .section-card {
-            background: #fbf9f4;
-            padding: 15px 20px;
-            border-radius: 12px;
-            border: 1px solid #eae2d5;
-            margin-bottom: 20px;
-            cursor: pointer;
-        }
-
-        .section-card[open] {
-            padding-bottom: 25px;
-            cursor: default;
-            background: #ffffff;
-        }
-
-        summary {
-            font-weight: bold;
-            color: #c2410c;
-            outline: none;
-            font-size: 16px;
-            padding: 5px 0;
-        }
-
-        .hidden {
-            display: none !important;
-        }
-
-        .form-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-            gap: 15px;
-            margin-top: 15px;
-        }
-
-        .form-group {
-            display: flex;
-            flex-direction: column;
-        }
-
-        label {
-            margin-bottom: 6px;
-            color: #b45309;
-            font-size: 14px;
-            font-weight: 500;
-        }
-
-        input,
-        select {
-            background: #fdfbf7;
-            border: 1px solid #cbd5e1;
-            color: #1e293b;
-            padding: 10px;
-            border-radius: 6px;
-            font-size: 14px;
-            outline: none;
-            width: 100%;
+        .form-group { display: flex; flex-direction: column; }
+        label { margin-bottom: 6px; color: #b45309; font-size: 14px; font-weight: 500; }
+        input, select { 
+            background: #fdfbf7; 
+            border: 1px solid #cbd5e1; 
+            color: #1e293b; 
+            padding: 10px; 
+            border-radius: 6px; 
+            font-size: 14px; 
+            outline: none; 
+            width: 100%; 
             box-sizing: border-box;
         }
-
-        input:focus,
-        select:focus {
-            border-color: #ea580c;
-            box-shadow: 0 0 0 3px rgba(234, 88, 12, 0.1);
+        input:focus, select:focus { border-color: #ea580c; box-shadow: 0 0 0 3px rgba(234,88,12,0.1); }
+        .btn-group { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 15px; }
+        .btn { 
+            background: #ea580c; 
+            color: #ffffff; 
+            border: none; 
+            padding: 11px 20px; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            font-weight: 600; 
+            font-size: 14px; 
+            box-shadow: 0 2px 4px rgba(234,88,12,0.2);
         }
-
-        .btn-group {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-            margin-top: 15px;
+        .btn:hover { background: #c2410c; }
+        .btn-success { 
+            background: #16a34a; 
+            color: #ffffff; 
+            border: none; 
+            padding: 11px 20px; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            font-weight: 600; 
+            font-size: 14px; 
+            box-shadow: 0 2px 4px rgba(22,163,74,0.2);
         }
-
-        .btn {
-            background: #ea580c;
-            color: #ffffff;
-            border: none;
-            padding: 11px 20px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 14px;
-            box-shadow: 0 2px 4px rgba(234, 88, 12, 0.2);
-        }
-
-        .btn:hover {
-            background: #c2410c;
-        }
-
-        .btn-success {
-            background: #16a34a;
-            color: #ffffff;
-            border: none;
-            padding: 11px 20px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-weight: 600;
-            font-size: 14px;
-            box-shadow: 0 2px 4px rgba(22, 163, 74, 0.2);
-        }
-
-        .btn-success:hover {
-            background: #15803d;
-        }
-
-        .btn-danger {
-            background: #fff5f5;
-            color: #e11d48;
-            border: 1px solid #fca5a5;
-            padding: 6px 12px;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 13px;
+        .btn-success:hover { background: #15803d; }
+        .btn-danger { 
+            background: #fff5f5; 
+            color: #e11d48; 
+            border: 1px solid #fca5a5; 
+            padding: 6px 12px; 
+            border-radius: 6px; 
+            cursor: pointer; 
+            font-size: 13px; 
             font-weight: 500;
         }
-
-        .btn-danger:hover {
-            background: #ffe4e6;
-            border-color: #f43f5e;
-        }
-
+        .btn-danger:hover { background: #ffe4e6; border-color: #f43f5e; }
         .btn-secondary {
             background: #e2e8f0;
             color: #1e293b;
@@ -176,68 +103,31 @@
             font-weight: 600;
             font-size: 14px;
         }
-
-        .btn-secondary:hover {
-            background: #cbd5e1;
+        .btn-secondary:hover { background: #cbd5e1; }
+        .btn-ai-natal { background: #7c2d12; color: white; }
+        .btn-ai-natal:hover { background: #9a3412; }
+        .btn-ai-transit { background: #9a3412; color: white; }
+        .btn-ai-transit:hover { background: #ea580c; }
+        .btn-ai-full { background: #047857; color: white; }
+        .btn-ai-full:hover { background: #065f46; }
+        .user-info { background: #f1ece4; padding: 12px 20px; border-radius: 8px; margin-bottom: 25px; font-size: 15px; border-left: 4px solid #ea580c; color: #44403c; }
+        pre, textarea { 
+            background: #f8f6f0 !important; 
+            color: #0f172a !important; 
+            font-family: monospace; 
+            border: 1px solid #cbd5e1 !important; 
+            min-height: 250px; 
+            height: auto; 
         }
-
-        .btn-ai-natal {
-            background: #7c2d12;
-            color: white;
-        }
-
-        .btn-ai-natal:hover {
-            background: #9a3412;
-        }
-
-        .btn-ai-transit {
-            background: #9a3412;
-            color: white;
-        }
-
-        .btn-ai-transit:hover {
-            background: #ea580c;
-        }
-
-        .btn-ai-full {
-            background: #047857;
-            color: white;
-        }
-
-        .btn-ai-full:hover {
-            background: #065f46;
-        }
-
-        .user-info {
-            background: #f1ece4;
-            padding: 12px 20px;
-            border-radius: 8px;
-            margin-bottom: 25px;
-            font-size: 15px;
-            border-left: 4px solid #ea580c;
-            color: #44403c;
-        }
-
-        pre,
-        textarea {
-            background: #f8f6f0 !important;
-            color: #0f172a !important;
-            font-family: monospace;
-            border: 1px solid #cbd5e1 !important;
-            min-height: 250px;
-            height: auto;
-        }
-
         .active-radix-card {
-            padding: 12px 20px;
-            background: #fffbeb;
+            padding: 12px 20px; 
+            background: #fffbeb; 
             border: 1px solid #fef3c7;
-            border-left: 4px solid #d97706;
-            margin-top: -10px;
+            border-left: 4px solid #d97706; 
+            margin-top: -10px; 
             margin-bottom: 20px;
             border-radius: 0 8px 8px 0;
         }
-
         table {
             width: 100%;
             border-collapse: collapse;
@@ -248,65 +138,25 @@
             overflow: hidden;
             border: 1px solid #e2e8f0;
         }
-
         th {
-            background: #f1ece4 !important;
+            background: #f1ece4 !important; 
             color: #78350f !important;
             padding: 10px 12px;
             font-weight: 600;
             border-bottom: 2px solid #e2e8f0;
         }
-
         td {
             padding: 10px 12px;
             border-bottom: 1px solid #f1ece4;
             color: #334155;
         }
-
-        tr:hover {
-            background: #fbfbf9;
-        }
-
-        .row-selected {
-            background: #fffbeb !important;
-            border-left: 3px solid #d97706;
-        }
-
-        .text-report {
-            background: #faf9f5;
-            border-left: 4px solid #ea580c;
-            padding: 25px;
-            border-radius: 0 8px 8px 0;
-            color: #1e293b;
-            border-top: 1px solid #f1ece4;
-            border-right: 1px solid #f1ece4;
-            border-bottom: 1px solid #f1ece4;
-        }
-
-        .report-title {
-            color: #9a3412;
-            font-size: 18px;
-            margin-bottom: 15px;
-            border-bottom: 1px solid #eae2d5;
-            padding-bottom: 8px;
-            font-weight: 600;
-        }
-
-        .report-list {
-            padding-left: 20px;
-            margin: 0;
-        }
-
-        .report-list li {
-            margin-bottom: 10px;
-            color: #334155;
-        }
-
-        .retro-label {
-            color: #ea580c;
-            font-weight: bold;
-            font-size: 12px;
-        }
+        tr:hover { background: #fbfbf9; }
+        .row-selected { background: #fffbeb !important; border-left: 3px solid #d97706; }
+        .text-report { background: #faf9f5; border-left: 4px solid #ea580c; padding: 25px; border-radius: 0 8px 8px 0; color: #1e293b; border-top: 1px solid #f1ece4; border-right: 1px solid #f1ece4; border-bottom: 1px solid #f1ece4; }
+        .report-title { color: #9a3412; font-size: 18px; margin-bottom: 15px; border-bottom: 1px solid #eae2d5; padding-bottom: 8px; font-weight: 600; }
+        .report-list { padding-left: 20px; margin: 0; }
+        .report-list li { margin-bottom: 10px; color: #334155; }
+        .retro-label { color: #ea580c; font-weight: bold; font-size: 12px; }
 
         /* Дополнительные стили для переключателей и фильтров */
         .filter-group {
@@ -316,21 +166,17 @@
             margin: 15px 0;
             align-items: end;
         }
-
         .filter-group .form-group {
             min-width: 140px;
         }
-
         .filter-group label {
             font-size: 13px;
         }
-
         .inline-radio {
             display: flex;
             gap: 15px;
             align-items: center;
         }
-
         .inline-radio label {
             font-weight: normal;
             color: #292524;
@@ -338,12 +184,10 @@
             align-items: center;
             gap: 4px;
         }
-
         .inline-radio input[type="radio"] {
             width: auto;
             margin-right: 4px;
         }
-
         .file-preview {
             display: flex;
             align-items: center;
@@ -354,18 +198,15 @@
             border: 1px solid #e2e8f0;
             margin-top: 6px;
         }
-
         .file-preview a {
             color: #ea580c;
             text-decoration: underline;
             word-break: break-all;
         }
-
         .file-preview .btn-danger {
             padding: 2px 10px;
             font-size: 12px;
         }
-
         .todo-form-title {
             margin-top: 0;
             color: #16a34a;
@@ -373,7 +214,6 @@
         }
     </style>
 </head>
-
 <body>
     <div class="container">
         <h1>
@@ -570,13 +410,23 @@
                 <pre id="json-output">Здесь появится technical log...</pre>
             </details>
         </div>
-        <p>
-            <a href="https://github.com/damirmur/astro-site" target="_blank">
-                <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="GitHub"
-                    width="30" height="30">
-            </a>
-        </p>
     </div>
+<p style="display: flex; align-items: center; gap: 12px; margin: 0;">
+    
+    <!-- 1. Ссылка-картинка GitHub -->
+    <a href="https://github.com" target="_blank" style="display: flex;">
+        <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="GitHub" width="30" height="30" style="display: block;">
+    </a> 
+    
+    <!-- 2. Ссылка-картинка DeepSeek (размер 30x30) -->
+    <a href="https://chat.deepseek.com/" target="_blank" style="display: flex;">
+        <img src="https://cdn.deepseek.com/chat/icon.png" alt="DeepSeek" width="30" height="30" style="display: block; border-radius: 6px;">
+    </a>
+
+    <!-- 3. Ссылка-эмодзи Замок (Размер увеличен до 30px) -->
+    <a href="./_/" target="_blank" style="font-size: 30px; line-height: 1; text-decoration: none;">🔐</a>
+
+</p>
 
     <script src="jszip.min.js"></script>
 
@@ -584,249 +434,249 @@
     <!-- Скрипты -->
     <script>
         // constants.js
-        const ZODIAC_SIGNS = [
-            "Овен ♈", "Телец ♉", "Близнецы ♊", "Рак ♋", "Лев ♌", "Дева ♍",
-            "Весы ♎", "Скорпион ♏", "Стрелец ♐", "Козерог ♑", "Водолей ♒", "Рыбы ♓"
-        ];
-        const PLANET_NAMES = {
-            0: "Солнце ☀️", 1: "Луна 🌙", 2: "Меркурий ☿", 3: "Венера ♀", 4: "Марс ♂",
-            5: "Юпитер ♃", 6: "Сатурн ♄", 7: "Уран ♅", 8: "Нептун ♆", 9: "Плутон ♇",
-            10: "Раху ☊", 12: "Лилит ⚓"
-        };
-        const ASPECT_NAMES = {
-            0: "Соединение ☌", 72: "Квинтиль ▰", 90: "Квадрат ▢", 120: "Трин △", 180: "Оппозиция ☍"
-        };
-        const ZODIAC_PROPERTIES = [
-            { element: "Огонь 🔥", cross: "Кардинальный" },
-            { element: "Земля ⛰️", cross: "Фиксированный" },
-            { element: "Воздух 💨", cross: "Мутабельный" },
-            { element: "Вода 💧", cross: "Кардинальный" },
-            { element: "Огонь 🔥", cross: "Фиксированный" },
-            { element: "Земля ⛰️", cross: "Мутабельный" },
-            { element: "Воздух 💨", cross: "Кардинальный" },
-            { element: "Вода 💧", cross: "Фиксированный" },
-            { element: "Огонь 🔥", cross: "Мутабельный" },
-            { element: "Земля ⛰️", cross: "Кардинальный" },
-            { element: "Воздух 💨", cross: "Фиксированный" },
-            { element: "Вода 💧", cross: "Мутабельный" }
-        ];
-        const BASE_PLANET_WEIGHTS = {
-            0: 2, 1: 2, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1
-        };
+const ZODIAC_SIGNS = [
+    "Овен ♈", "Телец ♉", "Близнецы ♊", "Рак ♋", "Лев ♌", "Дева ♍",
+    "Весы ♎", "Скорпион ♏", "Стрелец ♐", "Козерог ♑", "Водолей ♒", "Рыбы ♓"
+];
+const PLANET_NAMES = {
+    0: "Солнце ☀️", 1: "Луна 🌙", 2: "Меркурий ☿", 3: "Венера ♀", 4: "Марс ♂",
+    5: "Юпитер ♃", 6: "Сатурн ♄", 7: "Уран ♅", 8: "Нептун ♆", 9: "Плутон ♇",
+    10: "Раху ☊", 12: "Лилит ⚓"
+};
+const ASPECT_NAMES = {
+    0: "Соединение ☌", 72: "Квинтиль ▰", 90: "Квадрат ▢", 120: "Трин △", 180: "Оппозиция ☍"
+};
+const ZODIAC_PROPERTIES = [
+    { element: "Огонь 🔥", cross: "Кардинальный" },
+    { element: "Земля ⛰️", cross: "Фиксированный" },
+    { element: "Воздух 💨", cross: "Мутабельный" },
+    { element: "Вода 💧", cross: "Кардинальный" },
+    { element: "Огонь 🔥", cross: "Фиксированный" },
+    { element: "Земля ⛰️", cross: "Мутабельный" },
+    { element: "Воздух 💨", cross: "Кардинальный" },
+    { element: "Вода 💧", cross: "Фиксированный" },
+    { element: "Огонь 🔥", cross: "Мутабельный" },
+    { element: "Земля ⛰️", cross: "Кардинальный" },
+    { element: "Воздух 💨", cross: "Фиксированный" },
+    { element: "Вода 💧", cross: "Мутабельный" }
+];
+const BASE_PLANET_WEIGHTS = {
+    0: 2, 1: 2, 2: 1, 3: 1, 4: 1, 5: 1, 6: 1
+};
 
     </script>
     <script>
         // api.js
-        const ApiService = {
-            getUrl() {
-                return window.location.origin;
-            },
-            getHeaders() {
-                const token = localStorage.getItem("token");
-                return {
-                    'Authorization': token ? `Bearer ${token}` : ''
-                };
-            },
-            async login(provider, userData) {
-                const res = await fetch(`${this.getUrl()}/api/auth`, {
-                    method: 'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ provider, data: userData })
-                });
-                if (!res.ok) throw new Error('Ошибка авторизации на сервере');
-                return res.json();
-            },
-            async getSettings() {
-                const res = await fetch(`${this.getUrl()}/api/astrology/settings`, { headers: this.getHeaders() });
-                if (!res.ok) throw new Error('Не удалось загрузить настройки');
-                return res.json();
-            },
-            async saveSettings(settingsData) {
-                const res = await fetch(`${this.getUrl()}/api/astrology/settings`, {
-                    method: 'POST',
-                    headers: this.getHeaders(),
-                    body: JSON.stringify(settingsData)
-                });
-                if (!res.ok) throw new Error('Ошибка сохранения настроек');
-                return res.json();
-            },
-            // === TODO CRUD (с FormData) ===
-            async getTodoItems() {
-                const url = `${this.getUrl()}/api/todo/items`;
-                const res = await fetch(url, { headers: this.getHeaders() });
-                if (!res.ok) throw new Error('Не удалось загрузить задачи');
-                return res.json();
-            },
-            async createTodoItem(formData) {
-                const url = `${this.getUrl()}/api/todo/items`;
-                const res = await fetch(url, {
-                    method: 'POST',
-                    headers: this.getHeaders(),
-                    body: formData
-                });
-                if (!res.ok) throw new Error('Не удалось создать задачу');
-                return res.json();
-            },
-            async updateTodoItem(id, formData) {
-                const url = `${this.getUrl()}/api/todo/items/${id}`;
-                const res = await fetch(url, {
-                    method: 'PUT',
-                    headers: this.getHeaders(),
-                    body: formData
-                });
-                if (!res.ok) throw new Error('Не удалось обновить задачу');
-                return res.json();
-            },
-            async deleteTodoItem(id) {
-                const url = `${this.getUrl()}/api/todo/items/${id}`;
-                const res = await fetch(url, {
-                    method: 'DELETE',
-                    headers: this.getHeaders()
-                });
-                if (!res.ok) throw new Error('Не удалось удалить задачу');
-                return true;
-            },
-            // === Horoscopes ===
-            async getHoroscopesList() {
-                const user = JSON.parse(localStorage.getItem("user"));
-                if (!user) return [];
-                const url = `${this.getUrl()}/api/collections/horoscopes/records?filter=(user='${user.id}')&sort=-created`;
-                const res = await fetch(url, { headers: this.getHeaders() });
-                if (!res.ok) throw new Error('Не удалось загрузить базу гороскопов');
-                const data = await res.json();
-                return data.items || [];
-            },
-            async deleteHoroscope(id) {
-                const url = `${this.getUrl()}/api/collections/horoscopes/records/${id}`;
-                const res = await fetch(url, {
-                    method: 'DELETE',
-                    headers: this.getHeaders()
-                });
-                if (!res.ok) throw new Error('Не удалось удалить запись из базы данных');
-                return true;
-            },
-            async getNatalChart(date, lat, lon, title) {
-                const url = `${this.getUrl()}/api/astrology/chart?date=${date}&lat=${lat}&lon=${lon}&title=${encodeURIComponent(title)}`;
-                const res = await fetch(url, { headers: this.getHeaders() });
-                if (!res.ok) throw new Error('Ошибка вычисления натальной карты');
-                return res.json();
-            },
-            async getTransitChart(natalId = "") {
-                let url = `${this.getUrl()}/api/astrology/transit`;
-                if (natalId) url += `?natal_id=${natalId}`;
-                const res = await fetch(url, { headers: this.getHeaders() });
-                if (!res.ok) {
-                    const errData = await res.json();
-                    throw new Error(errData.message || 'Ошибка вычисления транзитов');
-                }
-                return res.json();
-            },
-            async getAiInterpretation(type, natalId) {
-                const res = await fetch(`${this.getUrl()}/api/astrology/interpret`, {
-                    method: 'POST',
-                    headers: this.getHeaders(),
-                    body: JSON.stringify({ type, natal_id: natalId })
-                });
-                if (!res.ok) {
-                    const err = await res.json();
-                    throw new Error(err.message || 'Ошибка вызова нейросети');
-                }
-                return res.json();
-            }
+const ApiService = {
+    getUrl() {
+        return window.location.origin;
+    },
+    getHeaders() {
+        const token = localStorage.getItem("token");
+        return {
+            'Authorization': token ? `Bearer ${token}` : ''
         };
+    },
+    async login(provider, userData) {
+        const res = await fetch(`${this.getUrl()}/api/auth`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ provider, data: userData })
+        });
+        if (!res.ok) throw new Error('Ошибка авторизации на сервере');
+        return res.json();
+    },
+    async getSettings() {
+        const res = await fetch(`${this.getUrl()}/api/astrology/settings`, { headers: this.getHeaders() });
+        if (!res.ok) throw new Error('Не удалось загрузить настройки');
+        return res.json();
+    },
+    async saveSettings(settingsData) {
+        const res = await fetch(`${this.getUrl()}/api/astrology/settings`, {
+            method: 'POST',
+            headers: this.getHeaders(),
+            body: JSON.stringify(settingsData)
+        });
+        if (!res.ok) throw new Error('Ошибка сохранения настроек');
+        return res.json();
+    },
+    // === TODO CRUD (с FormData) ===
+    async getTodoItems() {
+        const url = `${this.getUrl()}/api/todo/items`;
+        const res = await fetch(url, { headers: this.getHeaders() });
+        if (!res.ok) throw new Error('Не удалось загрузить задачи');
+        return res.json();
+    },
+    async createTodoItem(formData) {
+        const url = `${this.getUrl()}/api/todo/items`;
+        const res = await fetch(url, {
+            method: 'POST',
+            headers: this.getHeaders(),
+            body: formData
+        });
+        if (!res.ok) throw new Error('Не удалось создать задачу');
+        return res.json();
+    },
+    async updateTodoItem(id, formData) {
+        const url = `${this.getUrl()}/api/todo/items/${id}`;
+        const res = await fetch(url, {
+            method: 'PUT',
+            headers: this.getHeaders(),
+            body: formData
+        });
+        if (!res.ok) throw new Error('Не удалось обновить задачу');
+        return res.json();
+    },
+    async deleteTodoItem(id) {
+        const url = `${this.getUrl()}/api/todo/items/${id}`;
+        const res = await fetch(url, {
+            method: 'DELETE',
+            headers: this.getHeaders()
+        });
+        if (!res.ok) throw new Error('Не удалось удалить задачу');
+        return true;
+    },
+    // === Horoscopes ===
+    async getHoroscopesList() {
+        const user = JSON.parse(localStorage.getItem("user"));
+        if (!user) return [];
+        const url = `${this.getUrl()}/api/collections/horoscopes/records?filter=(user='${user.id}')&sort=-created`;
+        const res = await fetch(url, { headers: this.getHeaders() });
+        if (!res.ok) throw new Error('Не удалось загрузить базу гороскопов');
+        const data = await res.json();
+        return data.items || [];
+    },
+    async deleteHoroscope(id) {
+        const url = `${this.getUrl()}/api/collections/horoscopes/records/${id}`;
+        const res = await fetch(url, {
+            method: 'DELETE',
+            headers: this.getHeaders()
+        });
+        if (!res.ok) throw new Error('Не удалось удалить запись из базы данных');
+        return true;
+    },
+    async getNatalChart(date, lat, lon, title) {
+        const url = `${this.getUrl()}/api/astrology/chart?date=${date}&lat=${lat}&lon=${lon}&title=${encodeURIComponent(title)}`;
+        const res = await fetch(url, { headers: this.getHeaders() });
+        if (!res.ok) throw new Error('Ошибка вычисления натальной карты');
+        return res.json();
+    },
+    async getTransitChart(natalId = "") {
+        let url = `${this.getUrl()}/api/astrology/transit`;
+        if (natalId) url += `?natal_id=${natalId}`;
+        const res = await fetch(url, { headers: this.getHeaders() });
+        if (!res.ok) {
+            const errData = await res.json();
+            throw new Error(errData.message || 'Ошибка вычисления транзитов');
+        }
+        return res.json();
+    },
+    async getAiInterpretation(type, natalId) {
+        const res = await fetch(`${this.getUrl()}/api/astrology/interpret`, {
+            method: 'POST',
+            headers: this.getHeaders(),
+            body: JSON.stringify({ type, natal_id: natalId })
+        });
+        if (!res.ok) {
+            const err = await res.json();
+            throw new Error(err.message || 'Ошибка вызова нейросети');
+        }
+        return res.json();
+    }
+};
 
     </script>
     <script>
         // elements.js
-        const ElementsService = {
-            getZodiacData(lon) {
-                const idx = Math.floor(lon / 30);
-                const deg = Math.floor(lon % 30);
-                const min = Math.round(((lon % 30) - deg) * 60);
-                return { name: ZODIAC_SIGNS[idx], text: `${deg}° ${min}'` };
-            },
-            calculateScores(planets, aspects) {
-                let elementsScore = { "Огонь 🔥": 0, "Земля ⛰️": 0, "Воздух 💨": 0, "Вода 💧": 0 };
-                let crossesScore = { "Кардинальный": 0, "Фиксированный": 0, "Мутабельный": 0 };
-                let totalScore = 0;
-                let activatedOuterPlanets = [];
-                let moonAspects = new Set();
-                if (aspects && aspects.length > 0) {
-                    aspects.forEach(a => {
-                        if (a.a === 1) moonAspects.add(a.b);
-                        if (a.b === 1) moonAspects.add(a.a);
-                    });
+const ElementsService = {
+    getZodiacData(lon) {
+        const idx = Math.floor(lon / 30);
+        const deg = Math.floor(lon % 30);
+        const min = Math.round(((lon % 30) - deg) * 60);
+        return { name: ZODIAC_SIGNS[idx], text: `${deg}° ${min}'` };
+    },
+    calculateScores(planets, aspects) {
+        let elementsScore = { "Огонь 🔥": 0, "Земля ⛰️": 0, "Воздух 💨": 0, "Вода 💧": 0 };
+        let crossesScore = { "Кардинальный": 0, "Фиксированный": 0, "Мутабельный": 0 };
+        let totalScore = 0;
+        let activatedOuterPlanets = [];
+        let moonAspects = new Set();
+        if (aspects && aspects.length > 0) {
+            aspects.forEach(a => {
+                if (a.a === 1) moonAspects.add(a.b);
+                if (a.b === 1) moonAspects.add(a.a);
+            });
+        }
+        planets.forEach(p => {
+            let weight = BASE_PLANET_WEIGHTS[p.id] || 0;
+            if (p.id === 7 || p.id === 8 || p.id === 9) {
+                if (moonAspects.has(p.id)) {
+                    weight = 1;
+                    const outerNames = { 7: "Уран", 8: "Нептун", 9: "Плутон" };
+                    activatedOuterPlanets.push(outerNames[p.id]);
                 }
-                planets.forEach(p => {
-                    let weight = BASE_PLANET_WEIGHTS[p.id] || 0;
-                    if (p.id === 7 || p.id === 8 || p.id === 9) {
-                        if (moonAspects.has(p.id)) {
-                            weight = 1;
-                            const outerNames = { 7: "Уран", 8: "Нептун", 9: "Плутон" };
-                            activatedOuterPlanets.push(outerNames[p.id]);
-                        }
-                    }
-                    if (weight > 0) {
-                        const signIdx = Math.floor(p.lon / 30);
-                        const props = ZODIAC_PROPERTIES[signIdx];
-                        if (props) {
-                            elementsScore[props.element] += weight;
-                            crossesScore[props.cross] += weight;
-                            totalScore += weight;
-                        }
-                    }
-                });
-                return { elementsScore, crossesScore, totalScore, activatedOuterPlanets };
             }
-        };
+            if (weight > 0) {
+                const signIdx = Math.floor(p.lon / 30);
+                const props = ZODIAC_PROPERTIES[signIdx];
+                if (props) {
+                    elementsScore[props.element] += weight;
+                    crossesScore[props.cross] += weight;
+                    totalScore += weight;
+                }
+            }
+        });
+        return { elementsScore, crossesScore, totalScore, activatedOuterPlanets };
+    }
+};
 
     </script>
     <script>
         // ui.js
-        const UiService = {
-            // ---- старые методы для астрологии ----
-            renderUserPanel(user) {
-                document.getElementById("auth-block").classList.add("hidden");
-                document.getElementById("app-block").classList.remove("hidden");
-                document.getElementById("user-name").innerText = user.name || user.username;
-            },
+    const UiService = {
+        // ---- старые методы для астрологии ----
+        renderUserPanel(user) {
+            document.getElementById("auth-block").classList.add("hidden");
+            document.getElementById("app-block").classList.remove("hidden");
+            document.getElementById("user-name").innerText = user.name || user.username;
+        },
 
-            renderSettingsForm(data, remainderJson) {
-                document.getElementById("set-city").value = data.city || "";
-                document.getElementById("set-lat").value = data.latitude || "";
-                document.getElementById("set-lon").value = data.longitude || "";
-                document.getElementById("set-tz").value = data.tz || "";
-                document.getElementById("set-houses").value = data.houses || "P";
-                document.getElementById("settings-raw").value = JSON.stringify(remainderJson, null, 2);
-                if (data.latitude && data.longitude) {
-                    document.getElementById("geo-lat").value = data.latitude;
-                    document.getElementById("geo-lon").value = data.longitude;
-                }
-            },
+        renderSettingsForm(data, remainderJson) {
+            document.getElementById("set-city").value = data.city || "";
+            document.getElementById("set-lat").value = data.latitude || "";
+            document.getElementById("set-lon").value = data.longitude || "";
+            document.getElementById("set-tz").value = data.tz || "";
+            document.getElementById("set-houses").value = data.houses || "P";
+            document.getElementById("settings-raw").value = JSON.stringify(remainderJson, null, 2);
+            if (data.latitude && data.longitude) {
+                document.getElementById("geo-lat").value = data.latitude;
+                document.getElementById("geo-lon").value = data.longitude;
+            }
+        },
 
-            renderHoroscopesList(items, selectedId) {
-                const container = document.getElementById("horoscopes-list-container");
-                if (!items || items.length === 0) {
-                    container.innerHTML = `<p style="color:#94a3b8; font-style:italic;">В вашей базе пока нет сохраненных карт. Создайте первый расчет ниже.</p>`;
-                    return;
-                }
+        renderHoroscopesList(items, selectedId) {
+            const container = document.getElementById("horoscopes-list-container");
+            if (!items || items.length === 0) {
+                container.innerHTML = `<p style="color:#94a3b8; font-style:italic;">В вашей базе пока нет сохраненных карт. Создайте первый расчет ниже.</p>`;
+                return;
+            }
 
-                let html = `<table>
+            let html = `<table>
                 <tr>
                     <th>Название (Title)</th>
                     <th>Дата события (UTC)</th>
                     <th style="text-align:center; width:190px;">Действия</th>
                 </tr>`;
 
-                items.forEach(item => {
-                    const isSelected = item.id === selectedId;
-                    const rowClass = isSelected ? `class="row-selected"` : "";
-                    const btnText = isSelected ? "🎯 Активна" : "Выбрать";
-                    const btnClass = isSelected ? "btn-success" : "btn";
-                    const formattedDate = item.event_date ? item.event_date.replace("T", " ").substring(0, 19) : "—";
-                    const safeTitle = item.title.replace(/'/g, "\\'");
+            items.forEach(item => {
+                const isSelected = item.id === selectedId;
+                const rowClass = isSelected ? `class="row-selected"` : "";
+                const btnText = isSelected ? "🎯 Активна" : "Выбрать";
+                const btnClass = isSelected ? "btn-success" : "btn";
+                const formattedDate = item.event_date ? item.event_date.replace("T", " ").substring(0, 19) : "—";
+                const safeTitle = item.title.replace(/'/g, "\\'");
 
-                    html += `<tr ${rowClass}>
+                html += `<tr ${rowClass}>
                     <td style="padding:10px 12px; font-weight:600;">${item.title}</td>
                     <td style="padding:10px 12px; color:#475569;">${formattedDate}</td>
                     <td style="padding:10px 12px; text-align:center;">
@@ -834,19 +684,19 @@
                         <button onclick="deleteNatalCard('${item.id}', '${safeTitle}')" class="btn-danger" style="padding:4px 10px; font-size:12px; margin-left:5px; cursor:pointer;">Удалить</button>
                     </td>
                 </tr>`;
-                });
-                html += `</table>`;
-                container.innerHTML = html;
-            },
+            });
+            html += `</table>`;
+            container.innerHTML = html;
+        },
 
-            renderRawJson(data) {
-                document.getElementById("json-output").innerText = JSON.stringify(data, null, 2);
-            },
+        renderRawJson(data) {
+            document.getElementById("json-output").innerText = JSON.stringify(data, null, 2);
+        },
 
-            renderNatalReport(title, data, scoresData) {
-                let html = `<h4 class="report-title">📊 ${title}</h4>`;
-                html += `<h5>Положения планет в знаках и домах:</h5>`;
-                html += `<table style="margin-bottom:20px;">
+        renderNatalReport(title, data, scoresData) {
+            let html = `<h4 class="report-title">📊 ${title}</h4>`;
+            html += `<h5>Положения планет в знаках и домах:</h5>`;
+            html += `<table style="margin-bottom:20px;">
                 <tr>
                     <th>Планета</th>
                     <th>Абс. Долгота</th>
@@ -855,16 +705,16 @@
                     <th>Дом</th>
                     <th>Ретро</th>
                 </tr>`;
+                
+            data.chart.pl.forEach(p => {
+                const zod = ElementsService.getZodiacData(p.lon);
+                const pName = PLANET_NAMES[p.id] || `Планета ${p.id}`;
+                const planetEmoji = pName.split(" ").pop() || "";
+                const planetText = pName.split(" ").shift() || "";
+                const signEmoji = zod.name.split(" ").pop() || "";
+                const signText = zod.name.split(" ").shift() || "";
 
-                data.chart.pl.forEach(p => {
-                    const zod = ElementsService.getZodiacData(p.lon);
-                    const pName = PLANET_NAMES[p.id] || `Планета ${p.id}`;
-                    const planetEmoji = pName.split(" ").pop() || "";
-                    const planetText = pName.split(" ").shift() || "";
-                    const signEmoji = zod.name.split(" ").pop() || "";
-                    const signText = zod.name.split(" ").shift() || "";
-
-                    html += `<tr>
+                html += `<tr>
                     <td style="font-weight:600; color:#b45309;">${planetEmoji} ${planetText}</td>
                     <td>${p.lon}°</td>
                     <td style="font-weight:500;">${signEmoji} ${signText}</td>
@@ -872,50 +722,50 @@
                     <td style="font-weight:600; color:#ea580c;">${p.h} дом</td>
                     <td style="color:#ef4444; font-weight:bold;">${p.ir ? "℞" : "—"}</td>
                 </tr>`;
+            });
+            html += `</table>`;
+
+            if (data.chart.as && data.chart.as.length > 0) {
+                html += `<h5>Аспектные связи натальной карты:</h5><ul class="report-list" style="margin-bottom:20px;">`;
+                data.chart.as.forEach(a => {
+                    const pA = PLANET_NAMES[a.a] || `Пл.${a.a}`;
+                    const pB = PLANET_NAMES[a.b] || `Пл.${a.b}`;
+                    const aName = ASPECT_NAMES[a.t] || `Аспект ${a.t}°`;
+                    const emojiA = pA.split(" ").pop() || "";
+                    const emojiB = pB.split(" ").pop() || "";
+                    const emojiAsp = aName.split(" ").pop() || "";
+                    html += `<li>${emojiA} ${emojiAsp} ${emojiB} — <b>${pA.split(" ")[0]}</b> образует <b>${aName.split(" ")[0]}</b> к <b>${pB.split(" ")[0]}</b> (точность: ${a.orb}°).</li>`;
                 });
-                html += `</table>`;
+                html += `</ul>`;
+            } else {
+                html += `<p><i>Мажорных аспектов не обнаружено.</i></p>`;
+            }
 
-                if (data.chart.as && data.chart.as.length > 0) {
-                    html += `<h5>Аспектные связи натальной карты:</h5><ul class="report-list" style="margin-bottom:20px;">`;
-                    data.chart.as.forEach(a => {
-                        const pA = PLANET_NAMES[a.a] || `Пл.${a.a}`;
-                        const pB = PLANET_NAMES[a.b] || `Пл.${a.b}`;
-                        const aName = ASPECT_NAMES[a.t] || `Аспект ${a.t}°`;
-                        const emojiA = pA.split(" ").pop() || "";
-                        const emojiB = pB.split(" ").pop() || "";
-                        const emojiAsp = aName.split(" ").pop() || "";
-                        html += `<li>${emojiA} ${emojiAsp} ${emojiB} — <b>${pA.split(" ")[0]}</b> образует <b>${aName.split(" ")[0]}</b> к <b>${pB.split(" ")[0]}</b> (точность: ${a.orb}°).</li>`;
-                    });
-                    html += `</ul>`;
+            html += this.generateMetricsHtml(scoresData);
+            document.getElementById("text-output").innerHTML = html;
+        },
+
+        getHouseNumber(lon, houses) {
+            if (!houses || houses.length < 12) return 0;
+            for (let i = 0; i < 11; i++) {
+                let currentCusp = houses[i];
+                let nextCusp = houses[i + 1];
+                if (currentCusp < nextCusp) {
+                    if (lon >= currentCusp && lon < nextCusp) return i + 1;
                 } else {
-                    html += `<p><i>Мажорных аспектов не обнаружено.</i></p>`;
+                    if (lon >= currentCusp || lon < nextCusp) return i + 1;
                 }
+            }
+            return 12;
+        },
 
-                html += this.generateMetricsHtml(scoresData);
-                document.getElementById("text-output").innerHTML = html;
-            },
+        renderTransitReport(title, data, serverTime) {
+            let html = `<h4 class="report-title">⚡ ${title}</h4>`;
+            const activeCard = cachedHoroscopes.find(h => h.id === currentNatalId);
+            const natalHouses = activeCard && activeCard.astrological_data ? activeCard.astrological_data.hs : null;
 
-            getHouseNumber(lon, houses) {
-                if (!houses || houses.length < 12) return 0;
-                for (let i = 0; i < 11; i++) {
-                    let currentCusp = houses[i];
-                    let nextCusp = houses[i + 1];
-                    if (currentCusp < nextCusp) {
-                        if (lon >= currentCusp && lon < nextCusp) return i + 1;
-                    } else {
-                        if (lon >= currentCusp || lon < nextCusp) return i + 1;
-                    }
-                }
-                return 12;
-            },
-
-            renderTransitReport(title, data, serverTime) {
-                let html = `<h4 class="report-title">⚡ ${title}</h4>`;
-                const activeCard = cachedHoroscopes.find(h => h.id === currentNatalId);
-                const natalHouses = activeCard && activeCard.astrological_data ? activeCard.astrological_data.hs : null;
-
-                html += `<h5>Положение текущих планет на небе в домах вашего Натала:</h5>`;
-                html += `<table style="margin-bottom:20px;">
+            html += `<h5>Положение текущих планет на небе в домах вашего Натала:</h5>`;
+            html += `<table style="margin-bottom:20px;">
                 <tr>
                     <th>Транзитная Планета</th>
                     <th>Текущий Знак</th>
@@ -923,110 +773,110 @@
                     <th>Натальный Дом Проекции</th>
                     <th>Статус</th>
                 </tr>`;
+                
+            if (data.pl) {
+                data.pl.forEach(p => {
+                    const zod = ElementsService.getZodiacData(p.lon);
+                    const pName = PLANET_NAMES[p.id] || `Планета ${p.id}`;
+                    const planetEmoji = pName.split(" ").pop() || "";
+                    const planetText = pName.split(" ").shift() || "";
+                    const signEmoji = zod.name.split(" ").pop() || "";
+                    const signText = zod.name.split(" ").shift() || "";
 
-                if (data.pl) {
-                    data.pl.forEach(p => {
-                        const zod = ElementsService.getZodiacData(p.lon);
-                        const pName = PLANET_NAMES[p.id] || `Планета ${p.id}`;
-                        const planetEmoji = pName.split(" ").pop() || "";
-                        const planetText = pName.split(" ").shift() || "";
-                        const signEmoji = zod.name.split(" ").pop() || "";
-                        const signText = zod.name.split(" ").shift() || "";
-
-                        let correctHouse = p.h;
-                        if (natalHouses) {
-                            correctHouse = this.getHouseNumber(p.lon, natalHouses);
-                        }
-                        html += `<tr>
+                    let correctHouse = p.h;
+                    if (natalHouses) {
+                        correctHouse = this.getHouseNumber(p.lon, natalHouses);
+                    }
+                    html += `<tr>
                         <td style="font-weight:600; color:#15803d;">${planetEmoji} ${planetText}</td>
                         <td>${signEmoji} ${signText}</td>
                         <td>${zod.text}</td>
                         <td style="font-weight:600; color:#b45309; background:#fffbeb;">${correctHouse}-й дом</td>
                         <td style="color:#ea580c;">${p.ir ? "Ретро ℞" : "Прямая"}</td>
                     </tr>`;
-                    });
-                }
-                html += `</table>`;
+                });
+            }
+            html += `</table>`;
 
-                html += `<h5>Точные касания к натальной карте рождения (Орбис 1°):</h5><ul class="report-list">`;
-                if (data.as && data.as.length > 0) {
-                    data.as.forEach(a => {
-                        const nPlanet = PLANET_NAMES[a.a] || `Натал Пл.${a.a}`;
-                        const tPlanet = PLANET_NAMES[a.b] || `Транзит Пл.${a.b}`;
-                        const aName = ASPECT_NAMES[a.t] || `Аспект ${a.t}°`;
-                        const emojiN = nPlanet.split(" ").pop() || "";
-                        const emojiT = tPlanet.split(" ").pop() || "";
-                        const emojiAsp = aName.split(" ").pop() || "";
-                        html += `<li>${emojiT} ${emojiAsp} ${emojiN} — Транзитное <b>${tPlanet.split(" ")[0]}</b> делает <b>${aName.split(" ")[0]}</b> к вашему натальному <b>${nPlanet.split(" ")[0]}</b> (орбис: ${a.orb}°).</li>`;
-                    });
-                } else {
-                    html += `<li><i>На текущую секунду точных планетарных транзитов нет. Небо спокойно.</i></li>`;
-                }
-                html += `</ul>`;
-                document.getElementById("text-output").innerHTML = html;
-            },
+            html += `<h5>Точные касания к натальной карте рождения (Орбис 1°):</h5><ul class="report-list">`;
+            if (data.as && data.as.length > 0) {
+                data.as.forEach(a => {
+                    const nPlanet = PLANET_NAMES[a.a] || `Натал Пл.${a.a}`;
+                    const tPlanet = PLANET_NAMES[a.b] || `Транзит Пл.${a.b}`;
+                    const aName = ASPECT_NAMES[a.t] || `Аспект ${a.t}°`;
+                    const emojiN = nPlanet.split(" ").pop() || "";
+                    const emojiT = tPlanet.split(" ").pop() || "";
+                    const emojiAsp = aName.split(" ").pop() || "";
+                    html += `<li>${emojiT} ${emojiAsp} ${emojiN} — Транзитное <b>${tPlanet.split(" ")[0]}</b> делает <b>${aName.split(" ")[0]}</b> к вашему натальному <b>${nPlanet.split(" ")[0]}</b> (орбис: ${a.orb}°).</li>`;
+                });
+            } else {
+                html += `<li><i>На текущую секунду точных планетарных транзитов нет. Небо спокойно.</i></li>`;
+            }
+            html += `</ul>`;
+            document.getElementById("text-output").innerHTML = html;
+        },
 
-            generateMetricsHtml(sd) {
-                if (!sd) return '<p>Нет данных для анализа</p>';
-                let html = `<div style="margin-top: 20px; padding-top: 15px; border-top: 1px dashed #eae2d5;">`;
-                if (sd.activatedOuterPlanets && sd.activatedOuterPlanets.length > 0) {
-                    html += `<p style="font-size:12px; color:#065f46; background:#ecfdf5; padding:8px 12px; border-radius:6px; margin-bottom:15px; border:1px solid #a7f3d0;">
+        generateMetricsHtml(sd) {
+            if (!sd) return '<p>Нет данных для анализа</p>';
+            let html = `<div style="margin-top: 20px; padding-top: 15px; border-top: 1px dashed #eae2d5;">`;
+            if (sd.activatedOuterPlanets && sd.activatedOuterPlanets.length > 0) {
+                html += `<p style="font-size:12px; color:#065f46; background:#ecfdf5; padding:8px 12px; border-radius:6px; margin-bottom:15px; border:1px solid #a7f3d0;">
                     ℹ️ <b>Высшие планеты:</b> Поскольку ${sd.activatedOuterPlanets.join(", ")} аспектируют Луну, они включены в баланс стихий (+1 балл).
                 </p>`;
-                }
-                if (sd.elementsScore) {
-                    html += `<h5>🔥 Баланс Стихий:</h5><div style="margin-bottom:15px;">`;
-                    const totalScore = sd.totalScore || 0;
-                    for (const [el, score] of Object.entries(sd.elementsScore)) {
-                        const pct = totalScore > 0 ? Math.round((score / totalScore) * 100) : 0;
-                        html += `<div style="margin-bottom: 8px;">
+            }
+            if (sd.elementsScore) {
+                html += `<h5>🔥 Баланс Стихий:</h5><div style="margin-bottom:15px;">`;
+                const totalScore = sd.totalScore || 0;
+                for (const [el, score] of Object.entries(sd.elementsScore)) {
+                    const pct = totalScore > 0 ? Math.round((score / totalScore) * 100) : 0;
+                    html += `<div style="margin-bottom: 8px;">
                         <span style="display:inline-block; width:100px;"><b>${el}:</b></span> 
                         <span style="color:#b45309; font-weight:600;">${score} б. (${pct}%)</span>
                     </div>`;
-                    }
-                    html += `</div>`;
                 }
-                if (sd.crossesScore) {
-                    html += `<h5>🌀 Баланс Крестов:</h5><div style="margin-bottom:15px;">`;
-                    const totalScore = sd.totalScore || 0;
-                    for (const [cr, score] of Object.entries(sd.crossesScore)) {
-                        const pct = totalScore > 0 ? Math.round((score / totalScore) * 100) : 0;
-                        html += `<div style="margin-bottom: 8px;">
+                html += `</div>`;
+            }
+            if (sd.crossesScore) {
+                html += `<h5>🌀 Баланс Крестов:</h5><div style="margin-bottom:15px;">`;
+                const totalScore = sd.totalScore || 0;
+                for (const [cr, score] of Object.entries(sd.crossesScore)) {
+                    const pct = totalScore > 0 ? Math.round((score / totalScore) * 100) : 0;
+                    html += `<div style="margin-bottom: 8px;">
                         <span style="display:inline-block; width:100px;"><b>${cr}:</b></span> 
                         <span style="color:#b45309; font-weight:600;">${score} б. (${pct}%)</span>
                     </div>`;
-                    }
-                    html += `</div>`;
                 }
                 html += `</div>`;
-                return html;
-            },
+            }
+            html += `</div>`;
+            return html;
+        },
 
-            // ---- НОВЫЕ методы для Todo ----
-            renderTodoList(items) {
-                const container = document.getElementById("todo-list-container");
-                if (!items || items.length === 0) {
-                    container.innerHTML = `<p style="color:#94a3b8; font-style:italic;">Список задач пуст.</p>`;
-                    return;
-                }
+        // ---- НОВЫЕ методы для Todo ----
+renderTodoList(items) {
+    const container = document.getElementById("todo-list-container");
+    if (!items || items.length === 0) {
+        container.innerHTML = `<p style="color:#94a3b8; font-style:italic;">Список задач пуст.</p>`;
+        return;
+    }
 
-                const filterStatus = document.getElementById("filter-status").value;
-                const filterPriority = document.getElementById("filter-priority").value;
+    const filterStatus = document.getElementById("filter-status").value;
+    const filterPriority = document.getElementById("filter-priority").value;
 
-                let filtered = items;
-                if (filterStatus !== 'all') {
-                    filtered = filtered.filter(item => item.status === filterStatus);
-                }
-                if (filterPriority !== 'all') {
-                    filtered = filtered.filter(item => item.priority === filterPriority);
-                }
+    let filtered = items;
+    if (filterStatus !== 'all') {
+        filtered = filtered.filter(item => item.status === filterStatus);
+    }
+    if (filterPriority !== 'all') {
+        filtered = filtered.filter(item => item.priority === filterPriority);
+    }
 
-                if (filtered.length === 0) {
-                    container.innerHTML = `<p style="color:#94a3b8; font-style:italic;">Нет задач, соответствующих фильтрам.</p>`;
-                    return;
-                }
+    if (filtered.length === 0) {
+        container.innerHTML = `<p style="color:#94a3b8; font-style:italic;">Нет задач, соответствующих фильтрам.</p>`;
+        return;
+    }
 
-                let html = `<table>
+    let html = `<table>
         <tr style="background: #f1ece4;">
             <th style="text-align:left;">Заголовок</th>
             <th style="text-align:left;">Статус</th>
@@ -1036,20 +886,20 @@
             <th style="text-align:center;">Действия</th>
         </tr>`;
 
-                filtered.forEach(item => {
-                    const attachmentHtml = item.attachment ?
-                        `<a href="${ApiService.getUrl()}/api/collections/todo_items/records/${item.id}/files/${item.attachment}" target="_blank">📎 файл</a>` :
-                        '—';
+    filtered.forEach(item => {
+        const attachmentHtml = item.attachment ?
+            `<a href="${ApiService.getUrl()}/api/collections/todo_items/records/${item.id}/files/${item.attachment}" target="_blank">📎 файл</a>` :
+            '—';
 
-                    // Кодируем строки для data-атрибутов
-                    const safeTitle = encodeURIComponent(item.title);
-                    const safeStatus = encodeURIComponent(item.status);
-                    const safePriority = encodeURIComponent(item.priority);
-                    const safeDue = encodeURIComponent(item.due_date || '');
-                    const safeDescription = encodeURIComponent(item.description || '');
-                    const safeAttachment = encodeURIComponent(item.attachment || '');
+        // Кодируем строки для data-атрибутов
+        const safeTitle = encodeURIComponent(item.title);
+        const safeStatus = encodeURIComponent(item.status);
+        const safePriority = encodeURIComponent(item.priority);
+        const safeDue = encodeURIComponent(item.due_date || '');
+        const safeDescription = encodeURIComponent(item.description || '');
+        const safeAttachment = encodeURIComponent(item.attachment || '');
 
-                    html += `<tr data-id="${item.id}">
+        html += `<tr data-id="${item.id}">
             <td style="font-weight:600;">${item.title}</td>
             <td><span style="font-size:12px; padding:2px 6px; border-radius:4px; background:#e2e8f0;">${item.status}</span></td>
             <td>${item.priority}</td>
@@ -1067,388 +917,387 @@
                 <button class="todo-delete" data-id="${item.id}" data-title="${safeTitle}" style="padding:4px 8px; font-size:11px; background:#e11d48; color:white;">🗑️</button>
             </td>
         </tr>`;
-                });
-                html += `</table>`;
-                container.innerHTML = html;
+    });
+    html += `</table>`;
+    container.innerHTML = html;
 
-                // Назначаем обработчики через делегирование (один раз на контейнер)
-                container.addEventListener('click', function (e) {
-                    const target = e.target.closest('button');
-                    if (!target) return;
+    // Назначаем обработчики через делегирование (один раз на контейнер)
+    container.addEventListener('click', function(e) {
+        const target = e.target.closest('button');
+        if (!target) return;
 
-                    if (target.classList.contains('todo-edit')) {
-                        const id = target.dataset.id;
-                        const title = decodeURIComponent(target.dataset.title);
-                        const status = decodeURIComponent(target.dataset.status);
-                        const priority = decodeURIComponent(target.dataset.priority);
-                        const due = decodeURIComponent(target.dataset.due);
-                        const description = decodeURIComponent(target.dataset.description);
-                        const attachment = decodeURIComponent(target.dataset.attachment);
-                        editTodoRow(id, title, status, priority, due, description, attachment);
-                    } else if (target.classList.contains('todo-delete')) {
-                        const id = target.dataset.id;
-                        const title = decodeURIComponent(target.dataset.title);
-                        deleteTodoItem(id, title);
-                    }
-                });
-            },
-            setTodoFormMode(mode, priority) {
-                const titleEl = document.getElementById("todo-form-title");
-                const submitBtn = document.getElementById("todo-submit-btn");
-                const cancelBtn = document.getElementById("todo-cancel-btn");
-                const radioTask = document.querySelector('input[name="todo-type"][value="task"]');
-                const radioNote = document.querySelector('input[name="todo-type"][value="note"]');
-                const prioritySelect = document.getElementById("new-todo-priority");
+        if (target.classList.contains('todo-edit')) {
+            const id = target.dataset.id;
+            const title = decodeURIComponent(target.dataset.title);
+            const status = decodeURIComponent(target.dataset.status);
+            const priority = decodeURIComponent(target.dataset.priority);
+            const due = decodeURIComponent(target.dataset.due);
+            const description = decodeURIComponent(target.dataset.description);
+            const attachment = decodeURIComponent(target.dataset.attachment);
+            editTodoRow(id, title, status, priority, due, description, attachment);
+        } else if (target.classList.contains('todo-delete')) {
+            const id = target.dataset.id;
+            const title = decodeURIComponent(target.dataset.title);
+            deleteTodoItem(id, title);
+        }
+    });
+},
+        setTodoFormMode(mode, priority) {
+            const titleEl = document.getElementById("todo-form-title");
+            const submitBtn = document.getElementById("todo-submit-btn");
+            const cancelBtn = document.getElementById("todo-cancel-btn");
+            const radioTask = document.querySelector('input[name="todo-type"][value="task"]');
+            const radioNote = document.querySelector('input[name="todo-type"][value="note"]');
+            const prioritySelect = document.getElementById("new-todo-priority");
 
-                if (mode === 'edit') {
-                    const isNote = priority === 'note';
-                    titleEl.textContent = isNote ? '✏️ Изменить запись' : '✏️ Изменить задачу';
-                    submitBtn.textContent = 'Изменить';
-                    cancelBtn.classList.remove('hidden');
-                    if (isNote) {
-                        radioNote.checked = true;
-                        radioTask.checked = false;
-                    } else {
-                        radioTask.checked = true;
-                        radioNote.checked = false;
-                    }
+            if (mode === 'edit') {
+                const isNote = priority === 'note';
+                titleEl.textContent = isNote ? '✏️ Изменить запись' : '✏️ Изменить задачу';
+                submitBtn.textContent = 'Изменить';
+                cancelBtn.classList.remove('hidden');
+                if (isNote) {
+                    radioNote.checked = true;
+                    radioTask.checked = false;
                 } else {
-                    const isNote = priority === 'note';
-                    titleEl.textContent = isNote ? '➕ Добавить новую запись' : '➕ Добавить новую задачу';
-                    submitBtn.textContent = 'Добавить';
-                    cancelBtn.classList.add('hidden');
-                    if (isNote) {
-                        radioNote.checked = true;
-                        radioTask.checked = false;
-                        prioritySelect.value = 'note';
-                    } else {
-                        radioTask.checked = true;
-                        radioNote.checked = false;
-                        prioritySelect.value = 'medium';
-                    }
+                    radioTask.checked = true;
+                    radioNote.checked = false;
+                }
+            } else {
+                const isNote = priority === 'note';
+                titleEl.textContent = isNote ? '➕ Добавить новую запись' : '➕ Добавить новую задачу';
+                submitBtn.textContent = 'Добавить';
+                cancelBtn.classList.add('hidden');
+                if (isNote) {
+                    radioNote.checked = true;
+                    radioTask.checked = false;
+                    prioritySelect.value = 'note';
+                } else {
+                    radioTask.checked = true;
+                    radioNote.checked = false;
+                    prioritySelect.value = 'medium';
                 }
             }
-        };
+        }
+    };
 
     </script>
     <script>
         // app.js
-        let currentNatalId = "";
-        let cachedHoroscopes = [];
-        let editingTodoId = null;
-        let editingTodoAttachment = null;
+let currentNatalId = "";
+let cachedHoroscopes = [];
+let editingTodoId = null;
+let editingTodoAttachment = null;
 
-        document.addEventListener("DOMContentLoaded", () => {
-            const now = new Date();
-            const utcString = new Date(now.getTime() - now.getTimezoneOffset() * 60000)
-                .toISOString()
-                .substring(0, 16);
-            document.getElementById("birth-date").value = utcString;
-            if (localStorage.getItem("token")) showApp();
+document.addEventListener("DOMContentLoaded", () => {
+    const now = new Date();
+    const utcString = new Date(now.getTime() - now.getTimezoneOffset() * 60000)
+        .toISOString()
+        .substring(0, 16);
+    document.getElementById("birth-date").value = utcString;
+    if (localStorage.getItem("token")) showApp();
 
-            // Переключатель типа (задача/запись)
-            document.querySelectorAll('input[name="todo-type"]').forEach(radio => {
-                radio.addEventListener('change', function () {
-                    const isNote = this.value === 'note';
-                    const prioritySelect = document.getElementById("new-todo-priority");
-                    if (isNote) {
-                        prioritySelect.value = 'note';
-                    } else {
-                        if (!editingTodoId) {
-                            prioritySelect.value = 'medium';
-                        }
-                    }
-                    updateTodoFormTitle();
-                });
-            });
-
-            // Фильтры (только статус и приоритет)
-            document.getElementById('filter-status').addEventListener('change', applyFilters);
-            document.getElementById('filter-priority').addEventListener('change', applyFilters);
+    // Переключатель типа (задача/запись)
+    document.querySelectorAll('input[name="todo-type"]').forEach(radio => {
+        radio.addEventListener('change', function () {
+            const isNote = this.value === 'note';
+            const prioritySelect = document.getElementById("new-todo-priority");
+            if (isNote) {
+                prioritySelect.value = 'note';
+            } else {
+                if (!editingTodoId) {
+                    prioritySelect.value = 'medium';
+                }
+            }
+            updateTodoFormTitle();
         });
+    });
 
-        function updateTodoFormTitle() {
-            const isNote = document.querySelector('input[name="todo-type"]:checked').value === 'note';
-            const mode = editingTodoId ? 'edit' : 'add';
-            UiService.setTodoFormMode(mode, isNote ? 'note' : 'medium');
+    // Фильтры (только статус и приоритет)
+    document.getElementById('filter-status').addEventListener('change', applyFilters);
+    document.getElementById('filter-priority').addEventListener('change', applyFilters);
+});
+
+function updateTodoFormTitle() {
+    const isNote = document.querySelector('input[name="todo-type"]:checked').value === 'note';
+    const mode = editingTodoId ? 'edit' : 'add';
+    UiService.setTodoFormMode(mode, isNote ? 'note' : 'medium');
+}
+
+async function onTelegramAuth(user) {
+    try {
+        const data = await ApiService.login('telegram', user);
+        localStorage.setItem("token", data.token);
+        localStorage.setItem("user", JSON.stringify(data.record));
+        showApp();
+    } catch (err) { alert(err.message); }
+}
+
+function showApp() {
+    const user = JSON.parse(localStorage.getItem("user"));
+    UiService.renderUserPanel(user);
+    loadSettings();
+    loadHoroscopes();
+    loadTodoItems();
+}
+
+async function loadHoroscopes() {
+    try {
+        cachedHoroscopes = await ApiService.getHoroscopesList();
+        if (cachedHoroscopes.length > 0 && !currentNatalId) {
+            const latest = cachedHoroscopes[0];
+            currentNatalId = latest.id;
+            const formattedDate = latest.event_date ? latest.event_date.replace("T", " ").substring(0, 19) : "—";
+            document.getElementById("selected-natal-name").innerText = `"${latest.title}" от ${formattedDate}`;
+        } else if (cachedHoroscopes.length === 0) {
+            document.getElementById("selected-natal-name").innerText = "База карт пуста";
         }
+        UiService.renderHoroscopesList(cachedHoroscopes, currentNatalId);
+    } catch (err) { console.error("Ошибка архива:", err); }
+}
 
-        async function onTelegramAuth(user) {
-            try {
-                const data = await ApiService.login('telegram', user);
-                localStorage.setItem("token", data.token);
-                localStorage.setItem("user", JSON.stringify(data.record));
-                showApp();
-            } catch (err) { alert(err.message); }
+async function loadTodoItems() {
+    try {
+        const items = await ApiService.getTodoItems();
+        window.allTodoItems = items;
+        applyFilters();
+    } catch (err) { console.error("Ошибка загрузки задач:", err); }
+}
+
+function applyFilters() {
+    if (window.allTodoItems) {
+        UiService.renderTodoList(window.allTodoItems);
+    }
+}
+async function handleAddTodo() {
+    const title = document.getElementById("new-todo-title").value.trim();
+    if (!title) return alert("Заголовок обязателен");
+
+    const description = document.getElementById("new-todo-description").value;
+    const priority = document.getElementById("new-todo-priority").value;
+    const due_date = document.getElementById("new-todo-date").value;
+    const status = document.getElementById("new-todo-status").value;
+    const fileInput = document.getElementById("new-todo-attachment");
+    const file = fileInput.files[0];
+
+    const formData = new FormData();
+    formData.append('title', title);
+    formData.append('description', description);
+    formData.append('priority', priority);
+    formData.append('due_date', due_date);
+    formData.append('status', status);
+    if (file) {
+        formData.append('attachment', file);
+    }
+
+    try {
+        if (editingTodoId) {
+            await ApiService.updateTodoItem(editingTodoId, formData);
+        } else {
+            await ApiService.createTodoItem(formData);
         }
+        resetTodoForm();
+        loadTodoItems();
+    } catch (err) {
+        alert(err.message);
+    }
+}
+function editTodoRow(id, title, status, priority, dueDate, description, attachment) {
+    editingTodoId = id;
+    editingTodoAttachment = attachment || null;
 
-        function showApp() {
-            const user = JSON.parse(localStorage.getItem("user"));
-            UiService.renderUserPanel(user);
-            loadSettings();
-            loadHoroscopes();
-            loadTodoItems();
-        }
+    document.getElementById("new-todo-title").value = title;
+    document.getElementById("new-todo-description").value = description || "";
+    document.getElementById("new-todo-priority").value = priority;
+    document.getElementById("new-todo-date").value = dueDate || "";
+    document.getElementById("new-todo-status").value = status;
 
-        async function loadHoroscopes() {
-            try {
-                cachedHoroscopes = await ApiService.getHoroscopesList();
-                if (cachedHoroscopes.length > 0 && !currentNatalId) {
-                    const latest = cachedHoroscopes[0];
-                    currentNatalId = latest.id;
-                    const formattedDate = latest.event_date ? latest.event_date.replace("T", " ").substring(0, 19) : "—";
-                    document.getElementById("selected-natal-name").innerText = `"${latest.title}" от ${formattedDate}`;
-                } else if (cachedHoroscopes.length === 0) {
-                    document.getElementById("selected-natal-name").innerText = "База карт пуста";
-                }
-                UiService.renderHoroscopesList(cachedHoroscopes, currentNatalId);
-            } catch (err) { console.error("Ошибка архива:", err); }
-        }
+    const isNote = priority === 'note';
+    document.querySelector(`input[name="todo-type"][value="${isNote ? 'note' : 'task'}"]`).checked = true;
 
-        async function loadTodoItems() {
-            try {
-                const items = await ApiService.getTodoItems();
-                window.allTodoItems = items;
-                applyFilters();
-            } catch (err) { console.error("Ошибка загрузки задач:", err); }
-        }
+    UiService.setTodoFormMode('edit', priority);
 
-        function applyFilters() {
-            if (window.allTodoItems) {
-                UiService.renderTodoList(window.allTodoItems);
-            }
-        }
-        async function handleAddTodo() {
-            const title = document.getElementById("new-todo-title").value.trim();
-            if (!title) return alert("Заголовок обязателен");
-
-            const description = document.getElementById("new-todo-description").value;
-            const priority = document.getElementById("new-todo-priority").value;
-            const due_date = document.getElementById("new-todo-date").value;
-            const status = document.getElementById("new-todo-status").value;
-            const fileInput = document.getElementById("new-todo-attachment");
-            const file = fileInput.files[0];
-
-            const formData = new FormData();
-            formData.append('title', title);
-            formData.append('description', description);
-            formData.append('priority', priority);
-            formData.append('due_date', due_date);
-            formData.append('status', status);
-            if (file) {
-                formData.append('attachment', file);
-            }
-
-            try {
-                if (editingTodoId) {
-                    await ApiService.updateTodoItem(editingTodoId, formData);
-                } else {
-                    await ApiService.createTodoItem(formData);
-                }
-                resetTodoForm();
-                loadTodoItems();
-            } catch (err) {
-                alert(err.message);
-            }
-        }
-        function editTodoRow(id, title, status, priority, dueDate, description, attachment) {
-            editingTodoId = id;
-            editingTodoAttachment = attachment || null;
-
-            document.getElementById("new-todo-title").value = title;
-            document.getElementById("new-todo-description").value = description || "";
-            document.getElementById("new-todo-priority").value = priority;
-            document.getElementById("new-todo-date").value = dueDate || "";
-            document.getElementById("new-todo-status").value = status;
-
-            const isNote = priority === 'note';
-            document.querySelector(`input[name="todo-type"][value="${isNote ? 'note' : 'task'}"]`).checked = true;
-
-            UiService.setTodoFormMode('edit', priority);
-
-            const previewContainer = document.getElementById("todo-attachment-preview");
-            if (attachment) {
-                const fileUrl = `${ApiService.getUrl()}/api/collections/todo_items/records/${id}/files/${attachment}`;
-                previewContainer.innerHTML = `
+    const previewContainer = document.getElementById("todo-attachment-preview");
+    if (attachment) {
+        const fileUrl = `${ApiService.getUrl()}/api/collections/todo_items/records/${id}/files/${attachment}`;
+        previewContainer.innerHTML = `
                 <div class="file-preview">
                     <span>📎 <a href="${fileUrl}" target="_blank">${attachment}</a></span>
                     <button onclick="removeAttachment('${id}')" class="btn-danger">Удалить файл</button>
                 </div>
             `;
-            } else {
-                previewContainer.innerHTML = '';
-            }
-            document.getElementById("todo-form-container").scrollIntoView({ behavior: 'smooth' });
+    } else {
+        previewContainer.innerHTML = '';
+    }
+    document.getElementById("todo-form-container").scrollIntoView({ behavior: 'smooth' });
+}
+
+function cancelEditTodo() {
+    resetTodoForm();
+    loadTodoItems();
+}
+
+function resetTodoForm() {
+    editingTodoId = null;
+    editingTodoAttachment = null;
+    document.getElementById("new-todo-title").value = "";
+    document.getElementById("new-todo-description").value = "";
+    document.getElementById("new-todo-date").value = "";
+    document.getElementById("new-todo-status").value = "todo";
+    document.getElementById("new-todo-attachment").value = "";
+    document.getElementById("todo-attachment-preview").innerHTML = "";
+    document.querySelector('input[name="todo-type"][value="task"]').checked = true;
+    document.getElementById("new-todo-priority").value = "medium";
+    UiService.setTodoFormMode('add', 'medium');
+}
+async function removeAttachment(id) {
+    if (!confirm("Удалить прикреплённый файл?")) return;
+    try {
+        const formData = new FormData();
+        formData.append('attachment', '');
+        const title = document.getElementById("new-todo-title").value;
+        const description = document.getElementById("new-todo-description").value;
+        const priority = document.getElementById("new-todo-priority").value;
+        const due_date = document.getElementById("new-todo-date").value;
+        const status = document.getElementById("new-todo-status").value;
+        formData.append('title', title);
+        formData.append('description', description);
+        formData.append('priority', priority);
+        formData.append('due_date', due_date);
+        formData.append('status', status);
+
+        await ApiService.updateTodoItem(id, formData);
+        document.getElementById("todo-attachment-preview").innerHTML = '';
+        editingTodoAttachment = null;
+        loadTodoItems();
+    } catch (err) {
+        alert(err.message);
+    }
+}
+
+
+async function deleteTodoItem(id, title) {
+    if (!confirm(`Удалить задачу "${title}"?`)) return;
+    try {
+        await ApiService.deleteTodoItem(id);
+        loadTodoItems();
+    } catch (err) { alert(err.message); }
+}
+
+// Астрологические функции (без изменений)
+function selectNatalCard(id, title, dateStr) {
+    currentNatalId = id;
+    document.getElementById("selected-natal-name").innerText = `"${title}" от ${dateStr}`;
+    UiService.renderHoroscopesList(cachedHoroscopes, currentNatalId);
+}
+
+async function deleteNatalCard(id, title) {
+    if (!confirm(`Удалить гороскоп "${title}" из базы?`)) return;
+    try {
+        await ApiService.deleteHoroscope(id);
+        if (currentNatalId === id) {
+            currentNatalId = "";
+            document.getElementById("selected-natal-name").innerText = "Последний расчет";
         }
+        loadHoroscopes();
+    } catch (err) { alert(err.message); }
+}
 
-        function cancelEditTodo() {
-            resetTodoForm();
-            loadTodoItems();
+async function loadSettings() {
+    try {
+        const data = await ApiService.getSettings();
+        let jsonRemainder = { ...data };
+        ['city', 'latitude', 'longitude', 'tz', 'houses'].forEach(k => delete jsonRemainder[k]);
+        UiService.renderSettingsForm(data, jsonRemainder);
+    } catch (err) { console.error(err); }
+}
+
+async function saveSettings() {
+    let remainderData = {};
+    const rawJsonText = document.getElementById("settings-raw").value.trim();
+    if (rawJsonText) {
+        try { remainderData = JSON.parse(rawJsonText); }
+        catch (e) { return alert("Ошибка синтаксиса в поле JSON!"); }
+    }
+    const finalSettings = {
+        city: document.getElementById("set-city").value,
+        latitude: parseFloat(document.getElementById("set-lat").value) || 0,
+        longitude: parseFloat(document.getElementById("set-lon").value) || 0,
+        tz: document.getElementById("set-tz").value,
+        houses: document.getElementById("set-houses").value,
+        ...remainderData
+    };
+    try {
+        await ApiService.saveSettings(finalSettings);
+        alert("Настройки сохранены!");
+        loadSettings();
+    } catch (err) { alert(err.message); }
+}
+
+async function calculateNatal() {
+    const dateInput = document.getElementById("birth-date").value;
+    if (!dateInput) return alert("Укажите дату");
+    const date = new Date(dateInput + ":00.000Z").toISOString();
+    const lat = document.getElementById("geo-lat").value;
+    const lon = document.getElementById("geo-lon").value;
+    let title = document.getElementById("calc-title").value.trim();
+    if (!title) title = `Расчет от ${dateInput.replace("T", " ")}`;
+    document.getElementById("text-output").innerText = "Вычисления...";
+    try {
+        const data = await ApiService.getNatalChart(date, lat, lon, title);
+        UiService.renderRawJson(data);
+        const planets = data.pl || (data.chart && data.chart.pl);
+        const aspects = data.as || (data.chart && data.chart.as);
+        if (planets && planets.length > 0) {
+            const normalizedData = data.chart ? data : { chart: { pl: planets, as: aspects }, saved_id: data.saved_id };
+            const scores = ElementsService.calculateScores(planets, aspects);
+            UiService.renderNatalReport(title, normalizedData, scores);
+            loadHoroscopes();
+        } else {
+            document.getElementById("text-output").innerText = "Бэкенд вернул пустую карту";
         }
+    } catch (err) {
+        document.getElementById("text-output").innerHTML = `<span style="color:#f87171;"><b>Ошибка вычислений:</b> ${err.message}</span>`;
+    }
+}
 
-        function resetTodoForm() {
-            editingTodoId = null;
-            editingTodoAttachment = null;
-            document.getElementById("new-todo-title").value = "";
-            document.getElementById("new-todo-description").value = "";
-            document.getElementById("new-todo-date").value = "";
-            document.getElementById("new-todo-status").value = "todo";
-            document.getElementById("new-todo-attachment").value = "";
-            document.getElementById("todo-attachment-preview").innerHTML = "";
-            document.querySelector('input[name="todo-type"][value="task"]').checked = true;
-            document.getElementById("new-todo-priority").value = "medium";
-            UiService.setTodoFormMode('add', 'medium');
+async function calculateTransit() {
+    document.getElementById("text-output").innerText = "Вычисления транзитов...";
+    try {
+        const data = await ApiService.getTransitChart(currentNatalId);
+        UiService.renderRawJson(data);
+        const serverTime = data.ts ? new Date(data.ts).toLocaleString("ru-RU") : new Date().toLocaleString("ru-RU");
+        let title = document.getElementById("calc-title").value.trim();
+        if (!title) {
+            const activeCard = cachedHoroscopes.find(h => h.id === currentNatalId);
+            const activeTitle = activeCard ? activeCard.title : "Натал";
+            title = `Транзит неба к карте "${activeTitle}"`;
         }
-        async function removeAttachment(id) {
-            if (!confirm("Удалить прикреплённый файл?")) return;
-            try {
-                const formData = new FormData();
-                formData.append('attachment', '');
-                const title = document.getElementById("new-todo-title").value;
-                const description = document.getElementById("new-todo-description").value;
-                const priority = document.getElementById("new-todo-priority").value;
-                const due_date = document.getElementById("new-todo-date").value;
-                const status = document.getElementById("new-todo-status").value;
-                formData.append('title', title);
-                formData.append('description', description);
-                formData.append('priority', priority);
-                formData.append('due_date', due_date);
-                formData.append('status', status);
+        UiService.renderTransitReport(title, data, serverTime);
+    } catch (err) {
+        document.getElementById("text-output").innerHTML = `<span style="color:#f87171;"><b>Ошибка транзита:</b> ${err.message}</span>`;
+    }
+}
 
-                await ApiService.updateTodoItem(id, formData);
-                document.getElementById("todo-attachment-preview").innerHTML = '';
-                editingTodoAttachment = null;
-                loadTodoItems();
-            } catch (err) {
-                alert(err.message);
-            }
-        }
-
-
-        async function deleteTodoItem(id, title) {
-            if (!confirm(`Удалить задачу "${title}"?`)) return;
-            try {
-                await ApiService.deleteTodoItem(id);
-                loadTodoItems();
-            } catch (err) { alert(err.message); }
-        }
-
-        // Астрологические функции (без изменений)
-        function selectNatalCard(id, title, dateStr) {
-            currentNatalId = id;
-            document.getElementById("selected-natal-name").innerText = `"${title}" от ${dateStr}`;
-            UiService.renderHoroscopesList(cachedHoroscopes, currentNatalId);
-        }
-
-        async function deleteNatalCard(id, title) {
-            if (!confirm(`Удалить гороскоп "${title}" из базы?`)) return;
-            try {
-                await ApiService.deleteHoroscope(id);
-                if (currentNatalId === id) {
-                    currentNatalId = "";
-                    document.getElementById("selected-natal-name").innerText = "Последний расчет";
-                }
-                loadHoroscopes();
-            } catch (err) { alert(err.message); }
-        }
-
-        async function loadSettings() {
-            try {
-                const data = await ApiService.getSettings();
-                let jsonRemainder = { ...data };
-                ['city', 'latitude', 'longitude', 'tz', 'houses'].forEach(k => delete jsonRemainder[k]);
-                UiService.renderSettingsForm(data, jsonRemainder);
-            } catch (err) { console.error(err); }
-        }
-
-        async function saveSettings() {
-            let remainderData = {};
-            const rawJsonText = document.getElementById("settings-raw").value.trim();
-            if (rawJsonText) {
-                try { remainderData = JSON.parse(rawJsonText); }
-                catch (e) { return alert("Ошибка синтаксиса в поле JSON!"); }
-            }
-            const finalSettings = {
-                city: document.getElementById("set-city").value,
-                latitude: parseFloat(document.getElementById("set-lat").value) || 0,
-                longitude: parseFloat(document.getElementById("set-lon").value) || 0,
-                tz: document.getElementById("set-tz").value,
-                houses: document.getElementById("set-houses").value,
-                ...remainderData
-            };
-            try {
-                await ApiService.saveSettings(finalSettings);
-                alert("Настройки сохранены!");
-                loadSettings();
-            } catch (err) { alert(err.message); }
-        }
-
-        async function calculateNatal() {
-            const dateInput = document.getElementById("birth-date").value;
-            if (!dateInput) return alert("Укажите дату");
-            const date = new Date(dateInput + ":00.000Z").toISOString();
-            const lat = document.getElementById("geo-lat").value;
-            const lon = document.getElementById("geo-lon").value;
-            let title = document.getElementById("calc-title").value.trim();
-            if (!title) title = `Расчет от ${dateInput.replace("T", " ")}`;
-            document.getElementById("text-output").innerText = "Вычисления...";
-            try {
-                const data = await ApiService.getNatalChart(date, lat, lon, title);
-                UiService.renderRawJson(data);
-                const planets = data.pl || (data.chart && data.chart.pl);
-                const aspects = data.as || (data.chart && data.chart.as);
-                if (planets && planets.length > 0) {
-                    const normalizedData = data.chart ? data : { chart: { pl: planets, as: aspects }, saved_id: data.saved_id };
-                    const scores = ElementsService.calculateScores(planets, aspects);
-                    UiService.renderNatalReport(title, normalizedData, scores);
-                    loadHoroscopes();
-                } else {
-                    document.getElementById("text-output").innerText = "Бэкенд вернул пустую карту";
-                }
-            } catch (err) {
-                document.getElementById("text-output").innerHTML = `<span style="color:#f87171;"><b>Ошибка вычислений:</b> ${err.message}</span>`;
-            }
-        }
-
-        async function calculateTransit() {
-            document.getElementById("text-output").innerText = "Вычисления транзитов...";
-            try {
-                const data = await ApiService.getTransitChart(currentNatalId);
-                UiService.renderRawJson(data);
-                const serverTime = data.ts ? new Date(data.ts).toLocaleString("ru-RU") : new Date().toLocaleString("ru-RU");
-                let title = document.getElementById("calc-title").value.trim();
-                if (!title) {
-                    const activeCard = cachedHoroscopes.find(h => h.id === currentNatalId);
-                    const activeTitle = activeCard ? activeCard.title : "Натал";
-                    title = `Транзит неба к карте "${activeTitle}"`;
-                }
-                UiService.renderTransitReport(title, data, serverTime);
-            } catch (err) {
-                document.getElementById("text-output").innerHTML = `<span style="color:#f87171;"><b>Ошибка транзита:</b> ${err.message}</span>`;
-            }
-        }
-
-        async function interpretAi(type) {
-            if (!currentNatalId) {
-                return alert("Сначала выберите активную карту в архиве!");
-            }
-            const outputDiv = document.getElementById("text-output");
-            outputDiv.innerHTML = `<div style="color:#b45309; font-weight:bold;">🤖 Астропсихолог-ИИ анализирует JSON-данные эфемерид... Пожалуйста, подождите...</div>`;
-            try {
-                const data = await ApiService.getAiInterpretation(type, currentNatalId);
-                const formattedText = data.interpretation.replace(/\n/g, "<br>");
-                outputDiv.innerHTML = `<div class="text-report">
+async function interpretAi(type) {
+    if (!currentNatalId) {
+        return alert("Сначала выберите активную карту в архиве!");
+    }
+    const outputDiv = document.getElementById("text-output");
+    outputDiv.innerHTML = `<div style="color:#b45309; font-weight:bold;">🤖 Астропсихолог-ИИ анализирует JSON-данные эфемерид... Пожалуйста, подождите...</div>`;
+    try {
+        const data = await ApiService.getAiInterpretation(type, currentNatalId);
+        const formattedText = data.interpretation.replace(/\n/g, "<br>");
+        outputDiv.innerHTML = `<div class="text-report">
                 <h4 class="report-title">🧠 Интерпретация от астропсихолога-ИИ</h4>
                 <div style="font-size:15px; line-height:1.7; color:#292524;">${formattedText}</div>
             </div>`;
-            } catch (err) {
-                outputDiv.innerHTML = `<span style="color:#ef4444;"><b>Ошибка ИИ-интерпретатора:</b> ${err.message}. Проверьте LM Studio.</span>`;
-            }
-        }
+    } catch (err) {
+        outputDiv.innerHTML = `<span style="color:#ef4444;"><b>Ошибка ИИ-интерпретатора:</b> ${err.message}. Проверьте LM Studio.</span>`;
+    }
+}
 
-        function logout() { localStorage.clear(); window.location.reload(); }
+function logout() { localStorage.clear(); window.location.reload(); }
 
     </script>
 </body>
-
 </html>
