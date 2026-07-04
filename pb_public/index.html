@@ -1,19 +1,24 @@
 <!DOCTYPE html>
 <html lang="ru">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Astro App</title>
+    <title>ЛК astro3D.ru</title>
     <link rel="stylesheet" href="styles.css">
 </head>
-
 <body>
     <div class="container">
         <h1>
             <a href="https://astro3d.ru/" target="_blank" rel="noopener noreferrer"
-                style="text-decoration: none; color: inherit; cursor: pointer;">
-                ☸️ Astro3D.ru
+                style="text-decoration: none; color: inherit; cursor: pointer; display: inline-flex; align-items: center; gap: 8px;">
+
+                <!-- Картинка-иконка из корня сайта (размер 30x30 для заголовка h1) -->
+                <img src="/favicon.ico" alt="Логотип" width="30" height="30"
+                    style="display: block; object-fit: contain;">
+
+                <!-- Текст заголовка -->
+                <span>Astro3D.ru</span>
+
             </a>
         </h1>
         <!-- БЛОК АВТОРИЗАЦИИ -->
@@ -21,6 +26,7 @@
             <h3>Вход в систему</h3>
             <p>Для расчета натальной карты и транзитов авторизуйтесь через Telegram:</p>
             <script async src="https://telegram.org/js/telegram-widget.js" data-telegram-login="astro3dAI_bot"
+
                 data-size="large" data-onauth="onTelegramAuth(user)" data-request-access="write"></script>
         </div>
 
@@ -104,16 +110,20 @@
                             </select>
                         </div>
                         <div class="form-group" style="grid-column: span 2;">
-                            <label>Вложение (файл):</label>
-                            <input type="file" id="new-todo-attachment">
+                            <label>Вложения (можно выбрать несколько файлов):</label>
+                            <!-- Добавлен атрибут multiple -->
+                            <input type="file" id="new-todo-attachment" multiple>
                             <div id="todo-attachment-preview" style="margin-top:6px;"></div>
                         </div>
                     </div>
-                    <div style="display: flex; gap: 12px; margin-top:15px;">
+                    <div style="display: flex; gap: 12px; margin-top:15px; align-items: center;">
                         <button onclick="handleAddTodo()" id="todo-submit-btn" class="btn"
                             style="background:#16a34a;">Добавить</button>
                         <button onclick="cancelEditTodo()" id="todo-cancel-btn"
                             class="btn-secondary hidden">Отмена</button>
+                        <!-- Новая кнопка "Удалить" – появляется только в режиме редактирования -->
+                        <button onclick="deleteCurrentTodo()" id="todo-delete-btn" class="btn-danger hidden"
+                            style="margin-left: auto;">Удалить</button>
                     </div>
                 </div>
 
@@ -205,30 +215,27 @@
             </details>
         </div>
     </div>
-<p style="display: flex; align-items: center; gap: 12px; margin: 0;">
-    
-    <!-- 1. Ссылка-картинка GitHub -->
-    <a href="https://github.com" target="_blank" style="display: flex;">
-        <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="GitHub" width="30" height="30" style="display: block;">
-    </a> 
-    
-    <!-- 2. Ссылка-картинка DeepSeek (размер 30x30) -->
-    <a href="https://chat.deepseek.com/" target="_blank" style="display: flex;">
-        <img src="https://cdn.deepseek.com/chat/icon.png" alt="DeepSeek" width="30" height="30" style="display: block; border-radius: 6px;">
-    </a>
+    <p style="display: flex; align-items: center; gap: 12px; margin: 0;">
 
-    <!-- 3. Ссылка-эмодзи Замок (Размер увеличен до 30px) -->
-    <a href="./_/" target="_blank" style="font-size: 30px; line-height: 1; text-decoration: none;">🔐</a>
-
-</p>
-
+        <a href="https://github.com" target="_blank" style="display: flex;">
+            <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="GitHub" width="30"
+                height="30" style="display: block;">
+        </a>
+        <a href="https://chat.deepseek.com/" target="_blank" style="display: flex;">
+            <img src="https://cdn.deepseek.com/chat/icon.png" alt="DeepSeek" width="30" height="30"
+                style="display: block; border-radius: 6px;">
+        </a>
+         <a href="./_/" target="_blank" style="font-size: 30px; line-height: 1; text-decoration: none;">🔐</a>
+    </p>
     <script src="jszip.min.js"></script>
+
+
+    <!-- Скрипты -->
+
     <script src="constants.js"></script>
     <script src="api.js"></script>
     <script src="elements.js"></script>
     <script src="ui.js"></script>
     <script src="app.js"></script>
-
 </body>
-
 </html>

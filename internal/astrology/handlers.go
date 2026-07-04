@@ -41,6 +41,9 @@ func RegisterAstrologyRoutes(se *core.ServeEvent, defaultSettings swissephe.User
     se.Router.GET("/api/todo/items", func(re *core.RequestEvent) error {
         return controllers.HandleGetTodoItems(re)
     })
+    se.Router.GET("/api/todo/attachment/{id}",  func(re *core.RequestEvent) error {
+        return controllers.HandleDownloadAttachment(re)
+    })
 
     // Создать новую задачу
     se.Router.POST("/api/todo/items", func(re *core.RequestEvent) error {

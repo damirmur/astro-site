@@ -1,6 +1,9 @@
 package controllers
 
 import (
+	"net/http" // ✅ Добавлен пропущенный импорт
+
+
     "github.com/pocketbase/dbx"
     "github.com/pocketbase/pocketbase/apis"
     "github.com/pocketbase/pocketbase/core"
@@ -9,24 +12,76 @@ import (
 
 // HandleGetTodoItems – возвращает список задач текущего пользователя
 func HandleGetTodoItems(e *core.RequestEvent) error {
-    app := e.App
-    authRecord := e.Auth // ✅ получаем через поле Auth
-    if authRecord == nil {
-        return apis.NewUnauthorizedError("Требуется авторизация", nil)
-    }
+	app := e.App
+	authRecord := e.Auth // ✅ получаем через поле Auth
+	if authRecord == nil {
+		return apis.NewUnauthorizedError("Требуется авторизация", nil)
+	}
 
-    records := []*core.Record{}
-    err := app.RecordQuery("todo_items").
-        AndWhere(dbx.HashExp{"user_id": authRecord.Id}).
-        OrderBy("created DESC").
-        All(&records)
-    if err != nil {
-        return apis.NewInternalServerError("Ошибка получения задач", err)
-    }
+	records := []*core.Record{}
+	err := app.RecordQuery("todo_items").
+		AndWhere(dbx.HashExp{"user_id": authRecord.Id}).
+		OrderBy("created DESC").
+		All(&records)
+	if err != nil {
+		return apis.NewInternalServerError("Ошибка получения задач", err)
+	}
 
-    return e.JSON(200, records)
+	return e.JSON(200, records)
 }
 
+func HandleDownloadAttachment(e *core.RequestEvent) error {
+	app := e.App
+	authRecord := e.Auth
+	if authRecord == nil {
+		return apis.NewUnauthorizedError("Требуется авторизация", nil)
+	}
+
+	id := e.Request.PathValue("id")
+	if id == "" {
+		return apis.NewBadRequestError("ID не указан", nil)
+	}
+
+	record, err := app.FindRecordById("todo_items", id)
+	if err != nil {
+		return apis.NewNotFoundError("Запись не найдена", err)
+	}
+
+	// Проверяем, что пользователь владелец
+	if record.GetString("user_id") != authRecord.Id {
+		return apis.NewForbiddenError("Нет прав", nil)
+	}
+
+	filename := record.GetString("attachment")
+	if filename == "" {
+		return apis.NewNotFoundError("Файл не найден", nil)
+	}
+
+	// Получаем файл из хранилища
+	fsys, err := app.NewFilesystem()
+	if err != nil {
+		return apis.NewInternalServerError("Ошибка доступа к файловой системе", err)
+	}
+	defer fsys.Close()
+
+	file, err := fsys.GetFile(record.BaseFilesPath() + "/" + filename)
+	if err != nil {
+		return apis.NewNotFoundError("Файл не найден в хранилище", err)
+	}
+	defer file.Close()
+
+	// Устанавливаем заголовки для скачивания
+	e.Response.Header().Set("Content-Disposition", "attachment; filename=\""+filename+"\"")
+	e.Response.Header().Set("Content-Type", "application/zip")
+
+	// ✅ Исправлено: извлекаем системное поле "updated" как тип time.Time
+	updatedAt := record.GetDateTime("updated").Time()
+
+	// Отдаём файл
+	http.ServeContent(e.Response, e.Request, filename, updatedAt, file)
+
+	return nil
+}
 // HandleCreateTodoItem – создание задачи с возможностью загрузки файла
 func HandleCreateTodoItem(e *core.RequestEvent) error {
     app := e.App
