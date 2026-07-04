@@ -1,212 +1,234 @@
 <!DOCTYPE html>
 <html lang="ru">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Astro App</title>
     <link rel="stylesheet" href="styles.css">
 </head>
+
 <body>
-<div class="container">
-    <h1>
-        <a href="https://astro3d.ru/" target="_blank" rel="noopener noreferrer" style="text-decoration: none; color: inherit; cursor: pointer;">
-         ☸️ Astro3D.ru
-        </a>
-    </h1>
-    <!-- БЛОК АВТОРИЗАЦИИ -->
-    <div id="auth-block" class="card">
-        <h3>Вход в систему</h3>
-        <p>Для расчета натальной карты и транзитов авторизуйтесь через Telegram:</p>
-        <script async src="https://telegram.org/js/telegram-widget.js" 
-            data-telegram-login="astro3dAI_bot" 
-            data-size="large" 
-            data-onauth="onTelegramAuth(user)" 
-
-            data-request-access="write"></script>
-    </div>
-
-    <!-- КЛИЕНТСКАЯ ПАНЕЛЬ -->
-    <div id="app-block" class="card hidden">
-        <div class="user-info">
-            Привет, <span id="user-name">Гость</span>!
-            <button onclick="logout()" class="btn-danger">Выйти</button>
+    <div class="container">
+        <h1>
+            <a href="https://astro3d.ru/" target="_blank" rel="noopener noreferrer"
+                style="text-decoration: none; color: inherit; cursor: pointer;">
+                ☸️ Astro3D.ru
+            </a>
+        </h1>
+        <!-- БЛОК АВТОРИЗАЦИИ -->
+        <div id="auth-block" class="card">
+            <h3>Вход в систему</h3>
+            <p>Для расчета натальной карты и транзитов авторизуйтесь через Telegram:</p>
+            <script async src="https://telegram.org/js/telegram-widget.js" data-telegram-login="astro3dAI_bot"
+                data-size="large" data-onauth="onTelegramAuth(user)" data-request-access="write"></script>
         </div>
 
-        <!-- 1. НАСТРОЙКИ -->
-        <details class="section-card">
-            <summary>🛠️ Настройки профиля (Нажмите, чтобы открыть)</summary>
-            <div class="form-grid">
-                <div class="form-group"><label>Город:</label><input type="text" id="set-city"></div>
-                <div class="form-group"><label>Широта:</label><input type="number" id="set-lat" step="0.001"></div>
-                <div class="form-group"><label>Долгота:</label><input type="number" id="set-lon" step="0.001"></div>
-                <div class="form-group"><label>Таймзона:</label><input type="text" id="set-tz"></div>
-                <div class="form-group">
-                    <label>Система домов:</label>
-                    <select id="set-houses">
-                        <option value="P">Placidus (Плацидус)</option>
-                        <option value="K">Koch (Кох)</option>
-                        <option value="E">Equal (Равнодомная)</option>
-                    </select>
-                </div>
+        <!-- КЛИЕНТСКАЯ ПАНЕЛЬ -->
+        <div id="app-block" class="card hidden">
+            <div class="user-info">
+                Привет, <span id="user-name">Гость</span>!
+                <button onclick="logout()" class="btn-danger">Выйти</button>
             </div>
-            <div class="form-group" style="margin-top: 15px;">
-                <label>⚙️ Дополнительные параметры (JSON):</label>
-                <textarea id="settings-raw" placeholder="{ ... }"></textarea>
-            </div>
-            <button onclick="saveSettings()" class="btn" style="margin-top:10px;">Сохранить настройки</button>
-        </details>
 
-        <!-- Список задач (переработан) -->
-        <details class="section-card" style="border-color: #16a34a;">
-            <summary style="color:#16a34a;">✅ Мои задачи (Todo) и записи (Note)</summary>
-            
-            <!-- Форма добавления/редактирования -->
-            <div id="todo-form-container" style="margin-bottom: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px; border: 1px solid #e2e8f0;">
-                <h4 id="todo-form-title" class="todo-form-title">➕ Добавить новую задачу</h4>
+            <!-- 1. НАСТРОЙКИ -->
+            <details class="section-card">
+                <summary>🛠️ Настройки профиля (Нажмите, чтобы открыть)</summary>
                 <div class="form-grid">
-                    <!-- Переключатель "Задача / Запись" -->
-                    <div class="form-group" style="grid-column: span 2;">
-                        <label>Тип:</label>
-                        <div class="inline-radio">
-                            <label><input type="radio" name="todo-type" value="task" checked> Задача</label>
-                            <label><input type="radio" name="todo-type" value="note"> Запись (Note)</label>
-                        </div>
-                    </div>
-                    <div class="form-group" style="grid-column: span 2;">
-                        <label>Заголовок:</label>
-                        <input type="text" id="new-todo-title" placeholder="Что нужно сделать?">
-                    </div>
-                    <div class="form-group" style="grid-column: span 2;">
-                        <label>Описание:</label>
-                        <textarea id="new-todo-description" placeholder="Подробности..." style="min-height: 80px;"></textarea>
-                    </div>
+                    <div class="form-group"><label>Город:</label><input type="text" id="set-city"></div>
+                    <div class="form-group"><label>Широта:</label><input type="number" id="set-lat" step="0.001"></div>
+                    <div class="form-group"><label>Долгота:</label><input type="number" id="set-lon" step="0.001"></div>
+                    <div class="form-group"><label>Таймзона:</label><input type="text" id="set-tz"></div>
                     <div class="form-group">
-                        <label>Приоритет:</label>
-                        <select id="new-todo-priority">
-                            <option value="note">Note</option>
-                            <option value="low">Low</option>
-                            <option value="medium" selected>Medium</option>
-                            <option value="high">High</option>
+                        <label>Система домов:</label>
+                        <select id="set-houses">
+                            <option value="P">Placidus (Плацидус)</option>
+                            <option value="K">Koch (Кох)</option>
+                            <option value="E">Equal (Равнодомная)</option>
                         </select>
                     </div>
-                    <div class="form-group">
-                        <label>Срок:</label>
-                        <input type="date" id="new-todo-date">
+                </div>
+                <div class="form-group" style="margin-top: 15px;">
+                    <label>⚙️ Дополнительные параметры (JSON):</label>
+                    <textarea id="settings-raw" placeholder="{ ... }"></textarea>
+                </div>
+                <button onclick="saveSettings()" class="btn" style="margin-top:10px;">Сохранить настройки</button>
+            </details>
+
+            <!-- Список задач (переработан) -->
+            <details class="section-card" style="border-color: #16a34a;">
+                <summary style="color:#16a34a;">✅ Мои задачи (Todo) и записи (Note)</summary>
+
+                <!-- Форма добавления/редактирования -->
+                <div id="todo-form-container"
+                    style="margin-bottom: 20px; padding: 15px; background: #f8f9fa; border-radius: 8px; border: 1px solid #e2e8f0;">
+                    <h4 id="todo-form-title" class="todo-form-title">➕ Добавить новую задачу</h4>
+                    <div class="form-grid">
+                        <!-- Переключатель "Задача / Запись" -->
+                        <div class="form-group" style="grid-column: span 2;">
+                            <label>Тип:</label>
+                            <div class="inline-radio">
+                                <label><input type="radio" name="todo-type" value="task" checked> Задача</label>
+                                <label><input type="radio" name="todo-type" value="note"> Запись (Note)</label>
+                            </div>
+                        </div>
+                        <div class="form-group" style="grid-column: span 2;">
+                            <label>Заголовок:</label>
+                            <input type="text" id="new-todo-title" placeholder="Что нужно сделать?">
+                        </div>
+                        <div class="form-group" style="grid-column: span 2;">
+                            <label>Описание:</label>
+                            <textarea id="new-todo-description" placeholder="Подробности..."
+                                style="min-height: 80px;"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label>Приоритет:</label>
+                            <select id="new-todo-priority">
+                                <option value="note">Note</option>
+                                <option value="low">Low</option>
+                                <option value="medium" selected>Medium</option>
+                                <option value="high">High</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Срок:</label>
+                            <input type="date" id="new-todo-date">
+                        </div>
+                        <div class="form-group" style="grid-column: span 2;">
+                            <label>Статус:</label>
+                            <select id="new-todo-status">
+                                <option value="todo">Todo</option>
+                                <option value="in_progress">In Progress</option>
+                                <option value="review">Review</option>
+                                <option value="completed">Completed</option>
+                            </select>
+                        </div>
+                        <div class="form-group" style="grid-column: span 2;">
+                            <label>Вложение (файл):</label>
+                            <input type="file" id="new-todo-attachment">
+                            <div id="todo-attachment-preview" style="margin-top:6px;"></div>
+                        </div>
                     </div>
-                    <div class="form-group" style="grid-column: span 2;">
+                    <div style="display: flex; gap: 12px; margin-top:15px;">
+                        <button onclick="handleAddTodo()" id="todo-submit-btn" class="btn"
+                            style="background:#16a34a;">Добавить</button>
+                        <button onclick="cancelEditTodo()" id="todo-cancel-btn"
+                            class="btn-secondary hidden">Отмена</button>
+                    </div>
+                </div>
+
+                <!-- Фильтры -->
+                <div class="filter-group">
+                    <div class="form-group">
                         <label>Статус:</label>
-                        <select id="new-todo-status">
+                        <select id="filter-status">
+                            <option value="all">Все</option>
                             <option value="todo">Todo</option>
                             <option value="in_progress">In Progress</option>
                             <option value="review">Review</option>
                             <option value="completed">Completed</option>
                         </select>
                     </div>
-                    <div class="form-group" style="grid-column: span 2;">
-                        <label>Вложение (файл):</label>
-                        <input type="file" id="new-todo-attachment">
-                        <div id="todo-attachment-preview" style="margin-top:6px;"></div>
+                    <div class="form-group">
+                        <label>Приоритет:</label>
+                        <select id="filter-priority">
+                            <option value="all">Все</option>
+                            <option value="note">Note</option>
+                            <option value="low">Low</option>
+                            <option value="medium">Medium</option>
+                            <option value="high">High</option>
+                        </select>
                     </div>
                 </div>
-                <div style="display: flex; gap: 12px; margin-top:15px;">
-                    <button onclick="handleAddTodo()" id="todo-submit-btn" class="btn" style="background:#16a34a;">Добавить</button>
-                    <button onclick="cancelEditTodo()" id="todo-cancel-btn" class="btn-secondary hidden">Отмена</button>
+                <div id="todo-list-container" style="margin-top:10px;">
+                    <p>Загрузка задач...</p>
+                </div>
+            </details>
+
+            <!-- 1.2 БАЗА ГОРОСКОПОВ -->
+            <details class="section-card" style="border-color: #ea580c;" id="horoscopes-details">
+                <summary style="color:#ea580c;">📂 Ваша база гороскопов (Нажмите, чтобы открыть)</summary>
+                <p style="font-size:13px; color:#64748b; margin-top:10px;">Выберите карту из списка ниже, чтобы
+                    построить к ней транзит неба, или удалите ненужные:</p>
+                <div id="horoscopes-list-container" style="margin-top:10px;">
+                    <p>Загрузка архива карт...</p>
+                </div>
+            </details>
+
+            <div class="active-radix-card">
+                <span><b>Выбранная карта радикса для транзитов:</b></span>
+                <span id="selected-natal-name" style="color:#b45309; font-weight:bold; margin-left:5px;">Загрузка
+                    архива...</span>
+            </div>
+
+            <!-- 2. АСТРОЛОГИЧЕСКИЕ РАСЧЕТЫ -->
+            <div class="card">
+                <h3>🔮 Создать новый расчет (Радикс)</h3>
+                <div class="form-grid">
+                    <div class="form-group"><label>Название расчета (Title):</label><input type="text" id="calc-title"
+                            placeholder="Если пусто — будет дата/время"></div>
+                    <div class="form-group"><label>Дата и время события (UTC):</label><input type="datetime-local"
+                            id="birth-date"></div>
+                    <div class="form-group"><label>Расчетная Широта:</label><input type="number" id="geo-lat"
+                            value="51.73" step="0.01"></div>
+                    <div class="form-group"><label>Расчетная Долгота:</label><input type="number" id="geo-lon"
+                            value="55.10" step="0.01"></div>
+                </div>
+                <div class="btn-group">
+                    <button onclick="calculateNatal()" class="btn">Рассчитать Натал</button>
+                    <button onclick="calculateTransit()" class="btn-success">Показать Transit на сейчас</button>
                 </div>
             </div>
 
-            <!-- Фильтры -->
-<div class="filter-group">
-    <div class="form-group">
-        <label>Статус:</label>
-        <select id="filter-status">
-            <option value="all">Все</option>
-            <option value="todo">Todo</option>
-            <option value="in_progress">In Progress</option>
-            <option value="review">Review</option>
-            <option value="completed">Completed</option>
-        </select>
+            <div class="card" style="border-color: #ea580c; background: #fffdfa;">
+                <h3 style="color:#9a3412;">🤖 Интерпретация от астропсихолога-ИИ</h3>
+                <p style="font-size:13px; color:#b45309; margin-top:-5px;">Запустите анализ выбранной карты через
+                    нейросеть:</p>
+                <div class="btn-group">
+                    <button onclick="interpretAi('natal')" class="btn btn-ai-natal">1. Разбор Натала 📜</button>
+                    <button onclick="interpretAi('transit')" class="btn btn-ai-transit">2. Обстановка на небе
+                        ☁️</button>
+                    <button onclick="interpretAi('full')" class="btn btn-ai-full">3. Совмещение (Транзит в домах Натала)
+                        ⚡</button>
+                </div>
+            </div>
+
+            <!-- 4. ТЕКСТОВЫЙ РЕЗУЛЬТАТ -->
+            <div class="card" style="margin-top:20px;">
+                <h3>📊 Астрологический отчет</h3>
+                <div id="text-output" class="text-report">Нажмите кнопку для запуска расчета...</div>
+            </div>
+
+            <details class="section-card" style="margin-top:20px;">
+                <summary>💻 JSON ответ (Для разработчиков)</summary>
+                <pre id="json-output">Здесь появится technical log...</pre>
+            </details>
+        </div>
     </div>
-    <div class="form-group">
-        <label>Приоритет:</label>
-        <select id="filter-priority">
-            <option value="all">Все</option>
-            <option value="note">Note</option>
-            <option value="low">Low</option>
-            <option value="medium">Medium</option>
-            <option value="high">High</option>
-        </select>
-    </div>
-</div>
-            <div id="todo-list-container" style="margin-top:10px;">
-                <p>Загрузка задач...</p>
-            </div>
-        </details>
+<p style="display: flex; align-items: center; gap: 12px; margin: 0;">
+    
+    <!-- 1. Ссылка-картинка GitHub -->
+    <a href="https://github.com" target="_blank" style="display: flex;">
+        <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="GitHub" width="30" height="30" style="display: block;">
+    </a> 
+    
+    <!-- 2. Ссылка-картинка DeepSeek (размер 30x30) -->
+    <a href="https://chat.deepseek.com/" target="_blank" style="display: flex;">
+        <img src="https://cdn.deepseek.com/chat/icon.png" alt="DeepSeek" width="30" height="30" style="display: block; border-radius: 6px;">
+    </a>
 
-        <!-- 1.2 БАЗА ГОРОСКОПОВ -->
-        <details class="section-card" style="border-color: #ea580c;" id="horoscopes-details">
-            <summary style="color:#ea580c;">📂 Ваша база гороскопов (Нажмите, чтобы открыть)</summary>
-            <p style="font-size:13px; color:#64748b; margin-top:10px;">Выберите карту из списка ниже, чтобы построить к ней транзит неба, или удалите ненужные:</p>
-            <div id="horoscopes-list-container" style="margin-top:10px;">
-                <p>Загрузка архива карт...</p>
-            </div>
-        </details>
+    <!-- 3. Ссылка-эмодзи Замок (Размер увеличен до 30px) -->
+    <a href="./_/" target="_blank" style="font-size: 30px; line-height: 1; text-decoration: none;">🔐</a>
 
-        <div class="active-radix-card">
-            <span><b>Выбранная карта радикса для транзитов:</b></span>
-            <span id="selected-natal-name" style="color:#b45309; font-weight:bold; margin-left:5px;">Загрузка архива...</span>
-        </div>
+</p>
 
-        <!-- 2. АСТРОЛОГИЧЕСКИЕ РАСЧЕТЫ -->
-        <div class="card">
-            <h3>🔮 Создать новый расчет (Радикс)</h3>
-            <div class="form-grid">
-                <div class="form-group"><label>Название расчета (Title):</label><input type="text" id="calc-title" placeholder="Если пусто — будет дата/время"></div>
-                <div class="form-group"><label>Дата и время события (UTC):</label><input type="datetime-local" id="birth-date"></div>
-                <div class="form-group"><label>Расчетная Широта:</label><input type="number" id="geo-lat" value="51.73" step="0.01"></div>
-                <div class="form-group"><label>Расчетная Долгота:</label><input type="number" id="geo-lon" value="55.10" step="0.01"></div>
-            </div>
-            <div class="btn-group">
-                <button onclick="calculateNatal()" class="btn">Рассчитать Натал</button>
-                <button onclick="calculateTransit()" class="btn-success">Показать Transit на сейчас</button>
-            </div>
-        </div>
-
-        <div class="card" style="border-color: #ea580c; background: #fffdfa;">
-            <h3 style="color:#9a3412;">🤖 Интерпретация от астропсихолога-ИИ</h3>
-            <p style="font-size:13px; color:#b45309; margin-top:-5px;">Запустите анализ выбранной карты через нейросеть:</p>
-            <div class="btn-group">
-                <button onclick="interpretAi('natal')" class="btn btn-ai-natal">1. Разбор Натала 📜</button>
-                <button onclick="interpretAi('transit')" class="btn btn-ai-transit">2. Обстановка на небе ☁️</button>
-                <button onclick="interpretAi('full')" class="btn btn-ai-full">3. Совмещение (Транзит в домах Натала) ⚡</button>
-            </div>
-        </div>
-
-        <!-- 4. ТЕКСТОВЫЙ РЕЗУЛЬТАТ -->
-        <div class="card" style="margin-top:20px;">
-            <h3>📊 Астрологический отчет</h3>
-            <div id="text-output" class="text-report">Нажмите кнопку для запуска расчета...</div>
-        </div>
-
-        <details class="section-card" style="margin-top:20px;">
-            <summary>💻 JSON ответ (Для разработчиков)</summary>
-            <pre id="json-output">Здесь появится technical log...</pre>
-        </details>
-    </div>
-</div>
-    <p>
-        <a href="https://github.com/damirmur/astro-site" target="_blank">
-            <img src="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png" alt="GitHub" width="30" height="30">
-        </a>
-    </p>
-
-
-
-
-
+    <script src="jszip.min.js"></script>
     <script src="constants.js"></script>
     <script src="api.js"></script>
     <script src="elements.js"></script>
     <script src="ui.js"></script>
     <script src="app.js"></script>
+
 </body>
+
 </html>
