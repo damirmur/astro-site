@@ -10,7 +10,7 @@ cat > temp.html << 'EOF'
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Astro App</title>
-    
+
     <!-- Объединенные стили -->
     <style>
 EOF
@@ -30,7 +30,7 @@ sed -n '/<body>/,/<\/body>/p' index.html | sed '1d;$d' >> temp.html
 
 # Добавляем скрипты с отдельными тегами
 cat >> temp.html << 'EOF'
-    
+
     <!-- Скрипты -->
 EOF
 
