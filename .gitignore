@@ -8,3 +8,4 @@ memory/
 HEARTBEAT.md
 heartbeat.log
 pb_data/
+temp/
