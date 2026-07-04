@@ -14,16 +14,25 @@ document.addEventListener("DOMContentLoaded", () => {
     // Переключатель типа (задача/запись)
     document.querySelectorAll('input[name="todo-type"]').forEach(radio => {
         radio.addEventListener('change', function () {
+            // Если мы редактируем существующую запись – не трогаем
+            if (editingTodoId) return;
+
             const isNote = this.value === 'note';
+            const dateInput = document.getElementById("new-todo-date");
+            const statusSelect = document.getElementById("new-todo-status");
             const prioritySelect = document.getElementById("new-todo-priority");
+
             if (isNote) {
+                const today = new Date().toISOString().split('T')[0];
+                dateInput.value = today;
+                statusSelect.value = 'completed';
                 prioritySelect.value = 'note';
             } else {
-                if (!editingTodoId) {
-                    prioritySelect.value = 'medium';
-                }
+                // Сбрасываем на значения по умолчанию для задачи
+                dateInput.value = '';
+                statusSelect.value = 'todo';
+                prioritySelect.value = 'medium';
             }
-            updateTodoFormTitle();
         });
     });
 
@@ -186,12 +195,25 @@ async function handleAddTodo() {
     const title = document.getElementById("new-todo-title").value.trim();
     if (!title) return alert("Заголовок обязателен");
 
-    const description = document.getElementById("new-todo-description").value;
-    const priority = document.getElementById("new-todo-priority").value;
-    const due_date = document.getElementById("new-todo-date").value;
-    const status = document.getElementById("new-todo-status").value;
+    // Определяем тип (задача или запись)
+    const typeRadio = document.querySelector('input[name="todo-type"]:checked');
+    const isNote = typeRadio && typeRadio.value === 'note';
+
+    let description = document.getElementById("new-todo-description").value;
+    let priority = document.getElementById("new-todo-priority").value;
+    let due_date = document.getElementById("new-todo-date").value;
+    let status = document.getElementById("new-todo-status").value;
+
+    // Если это запись (Note) — переопределяем дату, статус и приоритет
+    if (isNote) {
+        const today = new Date().toISOString().split('T')[0]; // YYYY-MM-DD
+        due_date = today;
+        status = 'completed';
+        priority = 'note';
+    }
+
     const fileInput = document.getElementById("new-todo-attachment");
-    const files = fileInput.files; // это FileList
+    const files = fileInput.files;
 
     const formData = new FormData();
     formData.append('title', title);
@@ -204,19 +226,18 @@ async function handleAddTodo() {
     if (files && files.length > 0) {
         try {
             const zipBlob = await createZipFromFiles(files);
-            // Имя файла: files.zip (можно также генерировать уникальное)
             formData.append('attachment', zipBlob, 'files.zip');
         } catch (err) {
             alert('Ошибка упаковки файлов: ' + err.message);
             return;
         }
     } else {
-        // Для простоты, пока оставим как есть: если не выбраны файлы, то поле не отправляется.
+        // Если редактируем и файлы не выбраны – не отправляем attachment
+        // (сервер оставит старый)
     }
 
     try {
         if (editingTodoId) {
-            // Поэтому оставим как есть: если файлы не выбраны, то старые остаются.
             await ApiService.updateTodoItem(editingTodoId, formData);
         } else {
             await ApiService.createTodoItem(formData);
