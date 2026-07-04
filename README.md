@@ -1,4 +1,4 @@
-# AstroSite 🦞
+# AstroSite ☸️
 
 Астрологическое приложение для расчёта натальных карт и транзитов планет, построенное на базе C-библиотеки [Sweph](https://www.astronomy.swin.edu.au/sweph/) с использованием Go и PocketBase.
 
