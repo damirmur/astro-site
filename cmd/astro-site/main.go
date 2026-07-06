@@ -34,7 +34,7 @@ func main() {
 
 	app.OnServe().BindFunc(func(se *core.ServeEvent) error {
 		se.Router.Bind(apis.CORS(apis.CORSConfig{
-			AllowOrigins: []string{"https://astro3d.ru", "http://10.66.66.9:8090", "http://localhost:8090"},
+			AllowOrigins: []string{"https://astro3d.ru", "http://10.66.66.9:8081", "http://localhost:8081"},
 			AllowHeaders: []string{"Content-Type", "Authorization"},
 			AllowMethods: []string{"GET", "POST", "PUT", "DELETE"},
 		}))

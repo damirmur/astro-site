@@ -3,7 +3,7 @@
 cd pb_public
 
 # Список JS файлов в нужном порядке (указывать БЕЗ расширения .js)
-JS_FILES=("constants" "api" "elements" "ui" "app")
+JS_FILES=("constants" "api" "elements" "ui" "app" "carts")
 
 # Автоматически собираем регулярное выражение для sed (пример: constants|api|elements|ui|app)
 SED_PATTERN=$(printf "|%s" "${JS_FILES[@]}")

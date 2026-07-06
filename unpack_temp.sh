@@ -74,7 +74,7 @@ body_content=$(awk '
         
         if (in_script) {
             script_buf = script_buf "\n" $0;
-            if ($0 ~ /\/\/[ \t]*(constants\.js|api\.js|elements\.js|ui\.js|app\.js)/) {
+            if ($0 ~ /\/\/[ \t]*(constants\.js|api\.js|elements\.js|ui\.js|app\.js|carts.js)/) {
                 has_marker=1;
             }
         } else {
