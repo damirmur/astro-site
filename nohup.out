@@ -214,3 +214,76 @@ INFO GET /api/collections/horoscopes/records?filter=(user='ajwax0yrr9ckh7g')&sor
 [0.00ms] SELECT `todo_items`.* FROM `todo_items` WHERE `user_id`='ajwax0yrr9ckh7g' ORDER BY `created` DESC
 INFO GET /api/todo/items
 signal: killed
+[3.00ms] CREATE TABLE IF NOT EXISTS `_migrations` (file VARCHAR(255) PRIMARY KEY NOT NULL, applied INTEGER NOT NULL)
+[0.00ms] SELECT (1) FROM `_migrations` WHERE `file`='1640988000_aux_init.go' LIMIT 1
+[0.00ms] SELECT (1) FROM `_migrations` WHERE `file`='1640988000_init.go' LIMIT 1
+[0.00ms] SELECT (1) FROM `_migrations` WHERE `file`='1717233556_v0.23_migrate.go' LIMIT 1
+[0.00ms] SELECT (1) FROM `_migrations` WHERE `file`='1717233557_v0.23_migrate2.go' LIMIT 1
+[0.00ms] SELECT (1) FROM `_migrations` WHERE `file`='1717233558_v0.23_migrate3.go' LIMIT 1
+[0.00ms] SELECT (1) FROM `_migrations` WHERE `file`='1717233559_v0.23_migrate4.go' LIMIT 1
+[0.00ms] SELECT (1) FROM `_migrations` WHERE `file`='1763020353_update_default_auth_alert_templates.go' LIMIT 1
+[0.00ms] SELECT (1) FROM `_migrations` WHERE `file`='1778828400_normalize_indexes.go' LIMIT 1
+[1.00ms] SELECT `_collections`.* FROM `_collections` ORDER BY `rowid` ASC
+[0.00ms] SELECT `_params`.* FROM `_params` WHERE `id`='settings'
+[0.00ms] SELECT `_collections`.* FROM `_collections` ORDER BY `rowid` ASC
+[0.00ms] CREATE TABLE IF NOT EXISTS `_migrations` (file VARCHAR(255) PRIMARY KEY NOT NULL, applied INTEGER NOT NULL)
+[0.00ms] SELECT (1) FROM `_migrations` WHERE `file`='1640988000_aux_init.go' LIMIT 1
+[0.00ms] SELECT (1) FROM `_migrations` WHERE `file`='1640988000_init.go' LIMIT 1
+[0.00ms] SELECT (1) FROM `_migrations` WHERE `file`='1717233556_v0.23_migrate.go' LIMIT 1
+[0.00ms] SELECT (1) FROM `_migrations` WHERE `file`='1717233557_v0.23_migrate2.go' LIMIT 1
+[0.00ms] SELECT (1) FROM `_migrations` WHERE `file`='1717233558_v0.23_migrate3.go' LIMIT 1
+[0.00ms] SELECT (1) FROM `_migrations` WHERE `file`='1717233559_v0.23_migrate4.go' LIMIT 1
+[0.00ms] SELECT (1) FROM `_migrations` WHERE `file`='1763020353_update_default_auth_alert_templates.go' LIMIT 1
+[0.00ms] SELECT (1) FROM `_migrations` WHERE `file`='1778828400_normalize_indexes.go' LIMIT 1
+2026/07/06 11:11:06 Server started at http://0.0.0.0:8081
+├─ REST API:  http://0.0.0.0:8081/api/
+└─ Dashboard: http://0.0.0.0:8081/_/
+[0.00ms] SELECT count(*) FROM `_superusers` WHERE NOT (`email`='__pbinstaller@example.com')
+[0.00ms] SELECT `users`.* FROM `users` WHERE `users`.`id`='ajwax0yrr9ckh7g' LIMIT 1
+[0.00ms] SELECT `user_settings`.* FROM `user_settings` WHERE `user`='ajwax0yrr9ckh7g' LIMIT 1
+INFO GET /api/astrology/settings
+[0.00ms] SELECT `users`.* FROM `users` WHERE `users`.`id`='ajwax0yrr9ckh7g' LIMIT 1
+[0.00ms] SELECT `todo_items`.* FROM `todo_items` WHERE `user_id`='ajwax0yrr9ckh7g' ORDER BY `created` DESC
+[0.00ms] SELECT `users`.* FROM `users` WHERE `users`.`id`='ajwax0yrr9ckh7g' LIMIT 1
+[0.00ms] SELECT `horoscopes`.* FROM `horoscopes` WHERE ('ajwax0yrr9ckh7g' = `horoscopes`.`user`) AND (`horoscopes`.`user` = 'ajwax0yrr9ckh7g') ORDER BY `horoscopes`.`created` DESC LIMIT 30
+[0.00ms] SELECT COUNT(DISTINCT `horoscopes`.`_rowid_`) FROM `horoscopes` WHERE ('ajwax0yrr9ckh7g' = `horoscopes`.`user`) AND (`horoscopes`.`user` = 'ajwax0yrr9ckh7g')
+INFO GET /api/collections/horoscopes/records?filter=(user='ajwax0yrr9ckh7g')&sort=-created
+INFO GET /api/todo/items
+[0.00ms] SELECT `users`.* FROM `users` WHERE `users`.`id`='ajwax0yrr9ckh7g' LIMIT 1
+[0.00ms] SELECT `todo_items`.* FROM `todo_items` WHERE `todo_items`.`id`='7gdohy9ylsw4vb8' LIMIT 1
+Deprecated: Please replace GetFile with GetReader.
+INFO GET /api/todo/attachment/7gdohy9ylsw4vb8
+[0.00ms] SELECT `users`.* FROM `users` WHERE `users`.`id`='ajwax0yrr9ckh7g' LIMIT 1
+[0.00ms] SELECT `user_settings`.* FROM `user_settings` WHERE `user`='ajwax0yrr9ckh7g' LIMIT 1
+INFO GET /api/astrology/settings
+[0.00ms] SELECT `users`.* FROM `users` WHERE `users`.`id`='ajwax0yrr9ckh7g' LIMIT 1
+[0.00ms] SELECT `horoscopes`.* FROM `horoscopes` WHERE ('ajwax0yrr9ckh7g' = `horoscopes`.`user`) AND (`horoscopes`.`user` = 'ajwax0yrr9ckh7g') ORDER BY `horoscopes`.`created` DESC LIMIT 30
+[0.00ms] SELECT COUNT(DISTINCT `horoscopes`.`_rowid_`) FROM `horoscopes` WHERE ('ajwax0yrr9ckh7g' = `horoscopes`.`user`) AND (`horoscopes`.`user` = 'ajwax0yrr9ckh7g')
+INFO GET /api/collections/horoscopes/records?filter=(user='ajwax0yrr9ckh7g')&sort=-created
+[0.00ms] SELECT `users`.* FROM `users` WHERE `users`.`id`='ajwax0yrr9ckh7g' LIMIT 1
+[0.00ms] SELECT `todo_items`.* FROM `todo_items` WHERE `user_id`='ajwax0yrr9ckh7g' ORDER BY `created` DESC
+INFO GET /api/todo/items
+[3.00ms] SELECT `users`.* FROM `users` WHERE `users`.`id`='ajwax0yrr9ckh7g' LIMIT 1
+[0.00ms] SELECT `user_settings`.* FROM `user_settings` WHERE `user`='ajwax0yrr9ckh7g' LIMIT 1
+INFO GET /api/astrology/settings
+[0.00ms] SELECT `users`.* FROM `users` WHERE `users`.`id`='ajwax0yrr9ckh7g' LIMIT 1
+[0.00ms] SELECT `todo_items`.* FROM `todo_items` WHERE `user_id`='ajwax0yrr9ckh7g' ORDER BY `created` DESC
+INFO GET /api/todo/items
+[0.00ms] SELECT `users`.* FROM `users` WHERE `users`.`id`='ajwax0yrr9ckh7g' LIMIT 1
+[0.00ms] SELECT `horoscopes`.* FROM `horoscopes` WHERE ('ajwax0yrr9ckh7g' = `horoscopes`.`user`) AND (`horoscopes`.`user` = 'ajwax0yrr9ckh7g') ORDER BY `horoscopes`.`created` DESC LIMIT 30
+[0.00ms] SELECT COUNT(DISTINCT `horoscopes`.`_rowid_`) FROM `horoscopes` WHERE ('ajwax0yrr9ckh7g' = `horoscopes`.`user`) AND (`horoscopes`.`user` = 'ajwax0yrr9ckh7g')
+INFO GET /api/collections/horoscopes/records?filter=(user='ajwax0yrr9ckh7g')&sort=-created
+[0.00ms] SELECT `users`.* FROM `users` WHERE `users`.`id`='ajwax0yrr9ckh7g' LIMIT 1
+[0.00ms] SELECT `user_settings`.* FROM `user_settings` WHERE `user`='ajwax0yrr9ckh7g' LIMIT 1
+INFO GET /api/astrology/settings
+[0.00ms] SELECT `users`.* FROM `users` WHERE `users`.`id`='ajwax0yrr9ckh7g' LIMIT 1
+[0.00ms] SELECT `todo_items`.* FROM `todo_items` WHERE `user_id`='ajwax0yrr9ckh7g' ORDER BY `created` DESC
+INFO GET /api/todo/items
+[0.00ms] SELECT `users`.* FROM `users` WHERE `users`.`id`='ajwax0yrr9ckh7g' LIMIT 1
+[0.00ms] SELECT `horoscopes`.* FROM `horoscopes` WHERE ('ajwax0yrr9ckh7g' = `horoscopes`.`user`) AND (`horoscopes`.`user` = 'ajwax0yrr9ckh7g') ORDER BY `horoscopes`.`created` DESC LIMIT 30
+[0.00ms] SELECT COUNT(DISTINCT `horoscopes`.`_rowid_`) FROM `horoscopes` WHERE ('ajwax0yrr9ckh7g' = `horoscopes`.`user`) AND (`horoscopes`.`user` = 'ajwax0yrr9ckh7g')
+INFO GET /api/collections/horoscopes/records?filter=(user='ajwax0yrr9ckh7g')&sort=-created
+[0.00ms] SELECT `users`.* FROM `users` WHERE `users`.`id`='ajwax0yrr9ckh7g' LIMIT 1
+[0.00ms] SELECT `todo_items`.* FROM `todo_items` WHERE `todo_items`.`id`='o8ggyyil5br0456' LIMIT 1
+Deprecated: Please replace GetFile with GetReader.
+INFO GET /api/todo/attachment/o8ggyyil5br0456
