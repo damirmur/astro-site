@@ -9,3 +9,5 @@ HEARTBEAT.md
 heartbeat.log
 pb_data/
 temp/
+go.sum
+tools/
