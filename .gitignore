@@ -11,3 +11,15 @@ pb_data/
 temp/
 go.sum
 tools/
+run.sh
+# артефакты сборки — в git не коммитим
+/lib/*.a
+*.so
+*.so.*
+*.dll
+*.dylib
+*.o
+*.obj
+*.test
+*.bin
+*.zip
